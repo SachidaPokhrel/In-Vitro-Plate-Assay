@@ -1,0 +1,319 @@
+---
+title: "SplitPlate Assay"
+author: "Sachida Pokhrel"
+date: "2025-04-16"
+output: html_document
+---
+
+```{r}
+#load the library
+library(ggplot2)
+library(tidyverse)
+library(ggpubr)
+library(rstatix)
+library(emmeans)
+library(multcompView)
+library(dplyr)
+library(stringr)
+```
+
+## First Biological Replicate
+```{r}
+library(tidyverse)
+#read data
+Rep1 <- read.csv("SplitPlate/SplitPlateData/2024-09-16_SplitPlate_B52.csv", na.strings = "na")
+#install and update R version
+#install.packages("installr")
+#library(installr)
+#updateR()
+#load the color palettes
+cbbPalette <- c( "#E69F00", "#56B4E9", "#009E73", "#CC79A7")
+#check the structure and see the data
+str(Rep1)
+head(Rep1)
+#changing the data into categorical data
+Rep1$Replication=as.factor(Rep1$Replication)
+Rep1$Media=as.factor(Rep1$Media)
+Rep1$Yeast=as.factor(Rep1$Yeast)
+Rep1$DAI=as.factor(Rep1$DAI)
+```
+
+
+```{r}
+#removing the 1st data since there was no growth associated with it
+#the data is considered to be the baseline for growth so since it violates the assumption of normality, we remove it from the analysis
+filterRep1 <-Rep1[Rep1$DAI != 2,]
+#plots
+plot <- Rep1 %>%
+  #subset(Media=="Yesize1DA") %>%
+  #subset(Yeast %in% c("Control", "SP_F14","EMM_F3", "EMM_F34")) %>%
+  ggplot(aes(x = DAI, y = increase, group = Yeast, color = Yeast)) +
+  stat_summary(fun = mean,geom="line") +   
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.5) +   
+  ylab("increase in colony diameter (mm)") +   
+  xlab("DAI") +   
+  theme_classic() +
+  scale_color_manual(values = cbbPalette) +
+  ###ggtitle("Dothideomycetes") +
+  theme(plot.title = element_text(hjust = 0.5))
+  #facet_wrap(~Class)
+plot
+
+size1 <- filterRep1 %>%
+  subset(Media=="YePDA") %>%
+  ggplot(aes(x = Yeast, y = increase, group = Yeast, fill = Yeast)) +
+  geom_boxplot()+
+  geom_point(shape = 21, color = "black", position = position_jitterdodge(dodge.width = 0.9))+
+  ylab("Increase in Colony Diameter (mm)") +   
+  xlab("Yeast Isolates") +  
+    scale_fill_manual(values = cbbPalette) +
+  theme(strip.text.x = element_text(size = 18, face= "italic"))+
+  theme(axis.title.x = element_text(size =25, face = "bold"), axis.title.y = element_text(size = 25, face = "bold"), axis.text.x=element_text(size=20, angle= 0), axis.text.y=element_text(size=20, angle= 0))+
+  theme_classic() +
+  theme(legend.position = "none")+
+  ggtitle("Impact of Yeast on Growth of Methylobacterium platani EMM_B52") +
+  theme(plot.title = element_text(hjust = 0.5))+
+  facet_wrap(~DAI)
+size1
+
+
+cw1 <- filterRep1 %>%
+  subset(Media=="YePDA") %>%
+  #subset(Yeast %in% c("Control", "SP_F14","EMM_F3", "EMM_F34")) %>%
+  ggplot(aes(x = Yeast, y = colony_weight, group = Yeast, fill = Yeast)) +
+  geom_boxplot()+
+  geom_point(shape = 21, color = "black", position = position_jitterdodge(dodge.width = 0.9))+
+  ylab("Colony Weight (gram)") +   
+  xlab("Yeast Isolates") +  
+  scale_fill_manual(values = cbbPalette) +
+  theme(strip.text.x = element_text(size = 18, face= "italic"))+
+  theme(axis.title.x = element_text(size =25, face = "bold"), axis.title.y = element_text(size = 25, face = "bold"), axis.text.x=element_text(size=20, angle= 0), axis.text.y=element_text(size=20, angle= 0))+
+  theme_classic() +
+  theme(legend.position = "none")+
+  #ggtitle("Impact of Yeast on Growth of Methylobacterium platani EMM_B52") +
+  theme(plot.title = element_text(hjust = 0.5))
+cw1
+
+
+cfu1 <- filterRep1 %>%
+  subset(Media=="YePDA") %>%
+  #subset(Yeast %in% c("Control", "SP_F14","EMM_F3", "EMM_F34")) %>%
+  ggplot(aes(x = Yeast, y = log10(CFU), group = Yeast, fill = Yeast)) +
+  geom_boxplot()+
+  geom_point(shape = 21, color = "black", position = position_jitterdodge(dodge.width = 0.9))+
+  ylab("Colony Forming Unit (CFU per ml)") +   
+  xlab("Yeast Isolates") +  
+  scale_fill_manual(values = cbbPalette) +
+  theme(strip.text.x = element_text(size = 18, face= "italic"))+
+  theme(axis.title.x = element_text(size =25, face = "bold"), axis.title.y = element_text(size = 25, face = "bold"), axis.text.x=element_text(size=20, angle= 0), axis.text.y=element_text(size=20, angle= 0))+
+  theme_classic() +
+  theme(legend.position = "none")+
+  #ggtitle("Impact of Yeast on Growth of Methylobacterium platani EMM_B52") +
+  theme(plot.title = element_text(hjust = 0.5))
+cfu1
+
+
+#combining similar dataset plots into one
+CWandCFU1 <- ggarrange(cw1, cfu1, nrow = 1, ncol = 2, common.legend = T)+
+  ggtitle("Impact of Yeast on Growth of Methylobacterium platani EMM_B52")
+CWandCFU1
+```
+
+
+```{r}
+#load library
+library(nlme)
+#stats used for size
+SizeRep1=lme(increase~Yeast*DAI, data = filterRep1, random=~1|Replication) ##replication random effect added by Dr. Steury
+summary(SizeRep1)
+anova(SizeRep1)
+#pairwise comparision
+lsmeans.SizeRep1 <- emmeans(SizeRep1, ~ Yeast|DAI) ###interaction added by Dr. Steury
+#emmeans(size,pairwise~Yeast) ##added by Dr. steury
+# estimate lsmeans 
+comp.SizeRep1 <- multcomp::cld(object = lsmeans.SizeRep1, alpha = 0.05, Letters = letters, reversed = TRUE, details = TRUE)
+# contrast with Tukey ajustment 
+comp.SizeRep1
+```
+
+
+```{r}
+#filter data to avoid other data except e
+filter1Rep1 <- filterRep1 %>% 
+  filter(Media == "YePDA" & DAI == "8")
+
+#stats used for colony weight
+CWRep1=lm(colony_weight~Yeast,data = filter1Rep1) ##replication random effect added by Dr. Steury
+summary(CWRep1)
+anova(CWRep1)
+#pairwise comparision
+lsmeans.CWRep1 <- emmeans(CWRep1, ~ Yeast) ###interaction added by Dr. Steury
+#emmeans(cw,pairwise~Yeast) ##added by Dr. steury
+# estimate lsmeans 
+comp.CWRep1 <- multcomp::cld(object = lsmeans.CWRep1, alpha = 0.05, Letters = letters, reversed = TRUE, details = TRUE)
+# contrast with Tukey ajustment 
+comp.CWRep1
+```
+
+
+```{r}
+#stats used for colony forming unit
+CFURep1=lm(log(CFU)~Yeast,data = filter1Rep1) 
+summary(CFURep1)
+anova(CFURep1)
+#pairwise comparision
+lsmeans.CFURep1 <- emmeans(CFURep1, ~ Yeast) ###interaction added by Dr. Steury
+#emmeans(cfu,pairwise~Yeast) ##added by Dr. steury
+# estimate lsmeans 
+comp.CFURep1 <- multcomp::cld(object = lsmeans.CFURep1, alpha = 0.05, Letters = letters, reversed = TRUE, details = TRUE)
+# contrast with Tukey ajustment 
+comp.CFURep1
+```
+
+## Second Biological Replicate
+```{r}
+#read data
+Rep2 <- read.csv("SplitPlate/SplitPlateData/2024-11-11_SplitPlate_B52-1.csv", na.strings = "na")
+
+#load the color palettes
+cbbPalette <- c( "#E69F00", "#56B4E9", "#009E73", "#CC79A7")
+#check the structure and see the data
+str(Rep2)
+head(Rep2)
+#changing the data into categorical data
+Rep2$Replication=as.factor(Rep2$Replication)
+Rep2$Yeast=as.factor(Rep2$Yeast)
+Rep2$DAI=as.factor(Rep2$DAI)
+```
+
+```{r}
+#removing the 1st data since there was no growth associated with it
+#the data is considered to be the baseline for growth so since it violates the assumption of normality, we remove it from the analysis
+filterRep2<-Rep2[Rep2$DAI != 2,]
+#plots
+plot2 <- Rep2 %>%
+  #subset(Media=="YePDA") %>%
+  #subset(Yeast %in% c("Control", "SP_F14","EMM_F3", "EMM_F34")) %>%
+  ggplot(aes(x = DAI, y = increase, group = Yeast, color = Yeast)) +
+  stat_summary(fun = mean,geom="line") +   
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.5) +   
+  ylab("increase in colony diameter (mm)") +   
+  xlab("DAI") +   
+  theme_classic() +
+  scale_color_manual(values = cbbPalette) +
+  ###ggtitle("Dothideomycetes") +
+  theme(plot.title = element_text(hjust = 0.5))
+  #facet_wrap(~Class)
+plot2
+
+size2 <- filterRep2 %>%
+  #subset(Media=="YePDA") %>%
+  ggplot(aes(x = Yeast, y = increase, group = Yeast, fill = Yeast)) +
+  geom_boxplot()+
+  geom_point(shape = 21, color = "black", position = position_jitterdodge(dodge.width = 0.9))+
+  ylab("Increase in Colony Diameter (mm)") +   
+  xlab("Yeast Isolates") +  
+    scale_fill_manual(values = cbbPalette) +
+  theme(strip.text.x = element_text(size = 18, face= "italic"))+
+  theme(axis.title.x = element_text(size =25, face = "bold"), axis.title.y = element_text(size = 25, face = "bold"), axis.text.x=element_text(size=20, angle= 0), axis.text.y=element_text(size=20, angle= 0))+
+  theme_classic() +
+  theme(legend.position = "none")+
+  ggtitle("Impact of Yeast on Growth of Methylobacterium platani EMM_B52") +
+  theme(plot.title = element_text(hjust = 0.5))+
+  facet_wrap(~DAI)
+size2
+
+
+cw2 <- filterRep2 %>%
+  #subset(Media=="YePDA") %>%
+  #subset(Yeast %in% c("Control", "SP_F14","EMM_F3", "EMM_F34")) %>%
+  ggplot(aes(x = Yeast, y = colony_weight, group = Yeast, fill = Yeast)) +
+  geom_boxplot()+
+  geom_point(shape = 21, color = "black", position = position_jitterdodge(dodge.width = 0.9))+
+  ylab("Colony Weight (gram)") +   
+  xlab("Yeast Isolates") +  
+  scale_fill_manual(values = cbbPalette) +
+  theme(strip.text.x = element_text(size = 18, face= "italic"))+
+  theme(axis.title.x = element_text(size =25, face = "bold"), axis.title.y = element_text(size = 25, face = "bold"), axis.text.x=element_text(size=20, angle= 0), axis.text.y=element_text(size=20, angle= 0))+
+  theme_classic() +
+  theme(legend.position = "none")+
+  #ggtitle("Impact of Yeast on Growth of Methylobacterium platani EMM_B52") +
+  theme(plot.title = element_text(hjust = 0.5))
+cw2
+
+
+cfu2 <- filterRep2 %>%
+  #subset(Media=="YePDA") %>%
+  #subset(Yeast %in% c("Control", "SP_F14","EMM_F3", "EMM_F34")) %>%
+  ggplot(aes(x = Yeast, y = log10(CFU), group = Yeast, fill = Yeast)) +
+  geom_boxplot()+
+  geom_point(shape = 21, color = "black", position = position_jitterdodge(dodge.width = 0.9))+
+  ylab("Colony Forming Unit (CFU per ml)") +   
+  xlab("Yeast Isolates") +  
+  scale_fill_manual(values = cbbPalette) +
+  theme(strip.text.x = element_text(size = 18, face= "italic"))+
+  theme(axis.title.x = element_text(size =25, face = "bold"), axis.title.y = element_text(size = 25, face = "bold"), axis.text.x=element_text(size=20, angle= 0), axis.text.y=element_text(size=20, angle= 0))+
+  theme_classic() +
+  theme(legend.position = "none")+
+  #ggtitle("Impact of Yeast on Growth of Methylobacterium platani EMM_B52") +
+  theme(plot.title = element_text(hjust = 0.5))
+cfu2
+
+
+#combining similar dataset plots into one
+CWandCFU2 <- ggarrange(cw2, cfu2, nrow = 1, ncol = 2, common.legend = T)+
+  ggtitle("Impact of Yeast on Growth of Methylobacterium platani EMM_B52")
+CWandCFU2
+```
+
+
+```{r}
+#load library
+library(nlme)
+#stats used for size
+SizeRep2=lme(increase~Yeast*DAI,data = filterRep2,random=~1|Replication) ##replication random effect added by Dr. Steury
+summary(SizeRep2)
+anova(SizeRep2)
+#pairwise comparision
+lsmeans.SizeRep2 <- emmeans(SizeRep2, ~ Yeast|DAI) ###interaction added by Dr. Steury
+#emmeans(size,pairwise~Yeast) ##added by Dr. steury
+# estimate lsmeans 
+comp.SizeRep2 <- multcomp::cld(object = lsmeans.SizeRep2, alpha = 0.05, Letters = letters, reversed = TRUE, details = TRUE)
+# contrast with Tukey ajustment 
+comp.SizeRep2
+```
+
+
+```{r}
+#filter data to avoid other data except e
+filter2Rep2 <- filterRep2 %>% 
+  filter(DAI == "10")
+
+#stats used for colony weight
+CWRep2 = lm(colony_weight ~ Yeast, data = filter2Rep2) ##replication random effect added by Dr. Steury
+summary(CWRep2)
+anova(CWRep2)
+#pairwise comparision
+lsmeans.CWRep2 <- emmeans(CWRep2, ~ Yeast) ###interaction added by Dr. Steury
+#emmeans(cw,pairwise~Yeast) ##added by Dr. steury
+# estimate lsmeans 
+comp.CWRep2 <- multcomp::cld(object = lsmeans.CWRep2, alpha = 0.05, Letters = letters, reversed = TRUE, details = TRUE)
+# contrast with Tukey ajustment 
+comp.CWRep2
+```
+
+
+```{r}
+#stats used for colony forming unit
+CFURep2=lm(log(CFU)~Yeast,data = filter2Rep2) 
+summary(CFURep2)
+anova(CFURep2)
+#pairwise comparision
+lsmeans.CFURep2 <- emmeans(CFURep2, ~ Yeast) ###interaction added by Dr. Steury
+#emmeans(cfu,pairwise~Yeast) ##added by Dr. steury
+# estimate lsmeans 
+comp.CFURep2 <- multcomp::cld(object = lsmeans.CFURep2, alpha = 0.05, Letters = letters, reversed = TRUE, details = TRUE)
+# contrast with Tukey ajustment 
+comp.CFURep2
+```
+
