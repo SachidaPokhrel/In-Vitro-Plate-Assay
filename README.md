@@ -39,10 +39,10 @@ Each replicate includes 2 bacterial colonies measured inoculated in the Split-Pl
 ## 📊 Statistical Analysis Workflow
 The analyses were conducted in R, using tidyverse-based data wrangling and statistical modeling tools:
 
-Data Cleaning and Processing: dplyr::filter() and %>% function of [tidyverse (version 2.0.0)](https://github.com/tidyverse/tidyverse/releases/tag/v2.0.0)
-Data visualtization: [cbbPallete](https://ghurault.github.io/HuraultMisc/reference/cbbPalette.html) was used for Color blind palette, [ggplot2(version 3.5.1)](https://cloud.r-project.org/web/packages/ggplot2/index.html) and [ggpubr(version 0.6.0)](https://cran.r-project.org/web/packages/ggpubr/index.html) for generating boxplot and line graph visualization
-Modeling: linear model; lm() from baseR and linear-mixed effect model from [nlme(version 3.1-168)](https://cran.r-project.org/web/packages/nlme/index.html) ::lme()
-Statistical Testing: [rstatix(version 0.7.2)](https://cran.r-project.org/web/packages/rstatix/index.html), [car(version 3.1-3)](https://cran.r-project.org/web/packages/car/index.html) for running ANOVA on the model. [emmeans(version 1.10.7)](https://cran.r-project.org/web/packages/emmeans/index.html) for running post hoc tests, [multcomp(version 1.4-28)](https://cran.r-project.org/web/packages/multcomp/index.html) for pairwise comparison and [multcompView(version 0.1-10)](https://cran.r-project.org/web/packages/multcompView/index.html) generate significant letters.
+**- Data Cleaning and Processing:** dplyr::filter() and %>% function of [tidyverse (version 2.0.0)](https://github.com/tidyverse/tidyverse/releases/tag/v2.0.0)
+**- Data visualtization:** [cbbPallete](https://ghurault.github.io/HuraultMisc/reference/cbbPalette.html) was used for Color blind palette, [ggplot2(version 3.5.1)](https://cloud.r-project.org/web/packages/ggplot2/index.html) and [ggpubr(version 0.6.0)](https://cran.r-project.org/web/packages/ggpubr/index.html) for generating boxplot and line graph visualization
+**- Modeling:** linear model; lm() from baseR and linear-mixed effect model from [nlme(version 3.1-168)](https://cran.r-project.org/web/packages/nlme/index.html) ::lme()
+**- Statistical Testing:** [rstatix(version 0.7.2)](https://cran.r-project.org/web/packages/rstatix/index.html), [car(version 3.1-3)](https://cran.r-project.org/web/packages/car/index.html) for running ANOVA on the model. [emmeans(version 1.10.7)](https://cran.r-project.org/web/packages/emmeans/index.html) for running post hoc tests, [multcomp(version 1.4-28)](https://cran.r-project.org/web/packages/multcomp/index.html) for pairwise comparison and [multcompView(version 0.1-10)](https://cran.r-project.org/web/packages/multcompView/index.html) generate significant letters.
 
 🔁 Reproducibility
 All codes were entered in R markdown with annotation for future documentation. The RMarkdown was knitted once to make sure there was no error in the codes and was reproducible.
