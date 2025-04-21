@@ -1,14 +1,14 @@
-# In-Vitro-Plate-Assay
+# 🧫 In-Vitro-Plate-Assay
 The interaction between 16 different yeast isolates belonging to various classes of basidiomycetes yeasts and six different bacterial isolates, isolated from various hosts, was studied using a specialized in-vitro plate assay. This assay was designed to identify different types of interactions, including contact-dependent, distance-dependent (via agar-diffusible compounds), and distance-independent (via volatile compounds) interactions. To assess that following type of assays were conducted.  
 
-##🧫 Co-Culture Plate Assay
+## Co-Culture Plate Assay
  Each plate contained eight 3 μl drops of yeast and bacteria arranged in diagonal rows positioned at increasing distances inside a 100 mm petri dish containing YePD agar medium, forming the shape of a “V”. At the apex, the microbe drops were placed in direct contact to determine any contact-dependent interactions. At the same time, the distance between colonies increased as the drops diverged to determine contact-independent interactions, such as diffusible compounds or volatile interactions. 
  
 ## In-vitro Split Plate Assay
 This was done for the confirmation of the volatile interactions. Since the previous co-culture experiment could not rule out the role of volatiles versus agar diffusible compounds, we repeated selected interactions inside 100 mm Petri dishes with a bifurcation, which physically separated the yeast from the bacterium, thus only allowing interactions via volatile metabolites. Since the Methylobacterium platani had a prominent impact due to yeast volatiles we moved forward with Methylobacterum with its most interaction with the yeast.
 
 
-##📊 Statistical Analysis Workflow
+## 📊 Statistical Analysis Workflow
 The analyses were conducted in R, using tidyverse-based data wrangling and statistical modeling tools:
 
 Data Cleaning: dplyr, tidyr
