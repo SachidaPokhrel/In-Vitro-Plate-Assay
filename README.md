@@ -6,12 +6,15 @@ The interaction between 16 different yeast isolates belonging to various classes
  
  | Column Name                 | Type        | Description                                                        |
 |----------------------------|-------------|--------------------------------------------------------------------|
-| `Treatment`                | Categorical | Combination of yeast and bacteria tested                          |
-| `Replication`              | Categorical | Biological replicate identifier                                    |
-| `ColonyDiameter`           | Continuous  | Measured diameter of bacterial colony (mm)                         |
-| `DAI`                      | Categorical | Days after inoculation                                             |
-| `Distance`                 | Categorical | Distance between yeast and bacterial colony on the plate          |
-| ⬇️ **Each row = one colony** |             | Each replicate has 8 colonies measured at different distances      |
+| **Yeast**                  | Categorical | Combination of yeast and bacteria tested                          |
+| **Class**                  | Categorical | Different Class of Yeasts used
+| **Replication**            | Categorical | Biological replicate identifier                                    |
+| **ColonyDiameter**(mm)     | Continuous  | Measured diameter of bacterial colony (mm)                         |
+| **DAI**                    | Categorical | Days after inoculation in the plate                                |
+| **distance_to_yeast**(mm)  | Categorical | Distance between yeast and bacterial colony on the plate          |
+
+**Each row = one colony** 
+Each replicate has 8 colonies measured at different distances
 
 ## In-vitro Split Plate Assay
 This was done for the confirmation of the volatile interactions. Since the previous co-culture experiment could not rule out the role of volatiles versus agar diffusible compounds, we repeated selected interactions inside 100 mm Petri dishes with a bifurcation, which physically separated the yeast from the bacterium, thus only allowing interactions via volatile metabolites. Since the Methylobacterium platani had a prominent impact due to yeast volatiles we moved forward with Methylobacterum with its most interaction with the yeast.
