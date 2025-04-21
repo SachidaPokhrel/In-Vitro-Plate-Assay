@@ -14,57 +14,39 @@ I have different dataset for each bacteria. Each dataset is in the following dat
 | **DAI**                    | Categorical | Days after inoculation                                                 |
 | **distance_to_yeast**(mm)  | Categorical | Distance between yeast and bacterial colony on the plate               |
 
-*Each row = one colony measured* 
+***Each row = one colony measured*** 
+
 Each replicate has 8 bacterial colonies measured present at different distances from 8 colonies of yeast.
 
 ## In-vitro Split Plate Assay
-This was done for the confirmation of the volatile interactions. Since the previous co-culture experiment could not rule out the role of volatiles versus agar diffusible compounds, we repeated selected interactions inside 100 mm Petri dishes with a bifurcation, which physically separated the yeast from the bacterium, thus only allowing interactions via volatile metabolites. Two colonies were inoculated in one compartment and other compartment is mss streaked with the yeast isolate or left uninoculated(in case of Control). Since the Methylobacterium platani had a prominent impact due to yeast volatiles we moved forward with Methylobacterum with its most interaction with the yeast.
+This was done for the confirmation of the volatile interactions. Since the previous co-culture experiment could not rule out the role of volatiles versus agar diffusible compounds, we repeated selected interactions inside 100 mm Petri dishes with a bifurcation, which physically separated the yeast from the bacterium, thus only allowing interactions via volatile metabolites. Two colonies were inoculated in one compartment and other compartment is mass streaked with the yeast isolate or left uninoculated (in case of Control). Since the *Methylobacterium platanii* EMM_B52 had a prominent impact due to yeast volatiles we moved forward with *Methylobacterium platanii* EMM_B52 that faced most prominent impact in the presence of yeast.
 Two biological replicate was conducted for the experiment and each replicate has different dataset. Each dataset is in the following data structure. 
 
 | Column Name                 | Type        | Description                                                        |
 |-----------------------------|-------------|--------------------------------------------------------------------|
-| **Yeast**                   | Categorical | Yeast isolate used in combination with EMM_B52                               |
+| **Yeast**                   | Categorical | Yeast isolate used in combination with EMM_B52                     |
 | **Replication**             | Categorical | Replicate of the treatment (3 replicates used and identified by number) |
 | **DAI**                     | Categorical | Days after inoculation                                             |
 | **ColonyDiameter**          | Continuous  | Measured diameter of bacterial colony (mm)                                  |
 | **ColonyWeight**            | Continuous  | Weight of bacterial colony (gram)                                    |
 | **CFU**                     | Continuous  | Colony Forming Units per ml                     |
 
-**Each row = one colony measured**
+***Each row = one colony measured***
+
 Each replicate includes 2 bacterial colonies measured inoculated in the Split-Plate
 
 
 ## 📊 Statistical Analysis Workflow
 The analyses were conducted in R, using tidyverse-based data wrangling and statistical modeling tools:
 
-
-
-Data Cleaning: dplyr, tidyr
-
-Statistical Testing: rstatix for ANOVA and post hoc tests
-
-Modeling: lm, emmeans for marginal means
-
-Visualization: ggplot2, ggpubr
-
-Post Hoc Interpretation: multcompView for compact letter displays
-
-Each .Rmd file is reproducible and includes:
-
-Data import and cleaning
-
-Summary statistics
-
-ANOVA models and assumptions
-
-Post hoc comparisons
-
-Figures and tables for publication
+Data Cleaning and Processing: dplyr::filter() and %>% function of [tidyverse (version 2.0.0)](https://github.com/tidyverse/tidyverse/releases/tag/v2.0.0)
+Data visualtization: [cbbPallete](https://ghurault.github.io/HuraultMisc/reference/cbbPalette.html) was used for Color blind palette, [ggplot2(version 3.5.1)](https://cloud.r-project.org/web/packages/ggplot2/index.html) and [ggpubr(version 0.6.0)](https://cran.r-project.org/web/packages/ggpubr/index.html) for generating boxplot and line graph visualization
+Modeling: linear model; lm() from baseR and linear-mixed effect model from [nlme(version 3.1-168)](https://cran.r-project.org/web/packages/nlme/index.html) ::lme()
+Statistical Testing: [rstatix(version 0.7.2)](https://cran.r-project.org/web/packages/rstatix/index.html), [car(version 3.1-3)](https://cran.r-project.org/web/packages/car/index.html) for running ANOVA on the model. [emmeans(version 1.10.7)](https://cran.r-project.org/web/packages/emmeans/index.html) for running post hoc tests, [multcomp(version 1.4-28)](https://cran.r-project.org/web/packages/multcomp/index.html) for pairwise comparison and [multcompView(version 0.1-10)](https://cran.r-project.org/web/packages/multcompView/index.html) generate significant letters.
 
 🔁 Reproducibility
+All codes were entered in R markdown with annotation for future documentation. The RMarkdown was knitted once to make sure there was no error in the codes and was reproducible.
 All Excel files are converted to .csv for compatibility and ease of import.
-
-- Code is fully annotated for clarity.
 
 Versioning is maintained via Git.
 
