@@ -2,11 +2,16 @@
 title: "Peace Assay"
 author: "Sachida Pokhrel"
 date: "2025-04-18"
-output: html_document
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+  md_document:
+    variant: gfm
 ---
 
 
-```{r}
+```{r Load necessary libraries}
 #load necessary library
 library(ggplot2)
 library(tidyverse)
@@ -20,14 +25,15 @@ library(dplyr)
 library(stringr)
 library(tidyverse)
 library(car)
+library(nlme)
 ```
 
-# *Curtobacterium flaccumfaciens* EMM_B44
+## ***Curtobacterium flaccumfaciens* EMM_B44**
 Combined plot for all yeast effecting bacterial growth. 16 different isolates of yeast are grouped under 4 different classes of yeast.
 
-```{r}
+```{r Plot for EMM_B44}
 #read data
-B44 <- read.csv("PeaceAssay/2024-08-09_PeaceAssay_B44.csv", na.strings = "na") 
+B44 <- read.csv("PeaceAssay/PeaceAssayData/2024-08-09_PeaceAssay_B44.csv", na.strings = "na") 
 
 
 #load cbb color palette
@@ -92,24 +98,27 @@ print(final_plotB44)
 ```
 
 ### Stats for *Curtobacterium flaccumfaciens* EMM_B44
-```{r}
+```{r Stats for EMM_B44}
 #filter data to remove 1st day data since the first data is taken as a base to measure the increase in colony size to rule out the variability that is caused by the drop inoculation. So, initially the increase in the colony diameter for 1st data is "0" that violates the assumption of normality, thus we remove that from analysis. This would be similar for all the bacterial isolates.
 
 B44.no.1st.data <- B44.no.contact[B44.no.contact$DAI != "2",]
 #We check interaction for all before cutting it down to the significant one.
 B44try=lme(increase~DAI*distance_to_yeast*Yeast, data = B44.no.1st.data, random = ~1|Replication, na.action = na.omit)
-summary(B44try)
 anova(B44try)
+
+
 
 #removed interaction terms that were not significant.
 resultsB44=lme(increase~DAI+distance_to_yeast*Yeast, data = B44.no.1st.data, random = ~1|Replication, na.action = na.omit)
+anova(B44try, resultsB44) #check if complex model was better or not
 summary(resultsB44) #gives summary of the linear model
 anova(resultsB44) #for overall x variables
 ```
 
-### Loop for running analysis for each day separately
+### Loop for running analysis for each day separately for EMM_B44
+
 Days after inoculation (DAI) as a factor is always significantly impacting the growth. However, sometimes DAI is significant under interaction with other factor like Yeast and distance to the yeast as a factor. Also, our plot will represent data for Day 6 thus we want comparison for other variables at Day 6 to present it into the plot later on.
-```{r}
+```{r loop of stat for each day for EMM_B44}
 # Extract all the unique days to be used for iteration in for loop
 day <- unique(B44.no.1st.data$DAI)
 # Initialize empty lists to store results
@@ -139,7 +148,7 @@ for (i in seq_along(day)) {
                                           Letters = letters, reversed = TRUE,
                                           details = TRUE)
    # Print lsmeans results
-  print(Results_lsmeansB44[[i]])
+  #print(Results_lsmeansB44[[i]])
   
   # Filter comparisons involving "Control"
   filtered_comparisonsB44[[i]] <- Results_lsmeansB44[[i]]$comparisons %>%
@@ -151,11 +160,11 @@ for (i in seq_along(day)) {
 ```
 
 
-# *Curtobacterium flaccumfaciens* EMM_B30
+## ***Curtobacterium flaccumfaciens* EMM_B30**
 
-```{r}
+```{r Plot for EMM_B30}
 #read data
-B30 <- read.csv("PeaceAssay/2024-07-21_PeaceAssay_B30.csv", na.strings = "na") 
+B30 <- read.csv("PeaceAssay/PeaceAssayData/2024-07-21_PeaceAssay_B30.csv", na.strings = "na") 
 
 
 #load cbb color palette
@@ -217,10 +226,9 @@ print(final_plotB30)
 ```
 
 ### Stats for *Curtobacterium flaccumfaciens* EMM_B30
-```{r}
+```{r Stats for EMM_B30}
 B30.no.1st.data <- B30.no.contact[B30.no.contact$DAI != "2",]
 B30try <- lme(increase~DAI*distance_to_yeast*Yeast, data = B30.no.1st.data, random = ~1|Replication, na.action = na.omit)
-summary(B30try)
 anova(B30try)
 
 resultsB30=lme(increase~DAI+distance_to_yeast*Yeast, data = B30.no.1st.data, random = ~1|Replication, na.action = na.omit)
@@ -230,7 +238,7 @@ anova(resultsB30)
 ```
 
 ### Loop for running analysis for each day separately for EMM_B30
-```{r}
+```{r Loop of stat for each day for EMM_B30}
 # Unique days
 day <- unique(B30.no.1st.data$DAI)
 # Initialize empty lists to store results
@@ -269,11 +277,11 @@ for (i in seq_along(day)) {
 }
 ```
 
-# *Pseudomonas massiliensis* EMM_B5
+## ***Pseudomonas massiliensis* EMM_B5**
 
-```{r}
+```{r Plot for EMM_B5}
 #read data
-B5 <- read.csv("PeaceAssay/2024-08-09_PeaceAssay_B5.csv", na.strings = "na") 
+B5 <- read.csv("PeaceAssay/PeaceAssayData/2024-08-09_PeaceAssay_B5.csv", na.strings = "na") 
 
 
 #load cbb color palette
@@ -333,13 +341,12 @@ print(final_plotB5)
 
 ```
 
-## Stats *Pseudomonas massiliensis* EMM_B5
+### Stats *Pseudomonas massiliensis* EMM_B5
 
-```{r}
+```{r Stats for EMM_B5}
 library(nlme)
 B5.no.1st.data <- B5.no.contact[B5.no.contact$DAI != "2",]
 B5try <- lme(increase~distance_to_yeast*Yeast*DAI, data = B5.no.1st.data, random = ~1|Replication, na.action = na.omit)
-summary(B5try)
 anova(B5try)
 
 resultsB5=lme(increase~distance_to_yeast*Yeast+Yeast*DAI, data = B5.no.1st.data, random = ~1|Replication, na.action = na.omit)
@@ -347,9 +354,9 @@ summary(resultsB5)
 anova(resultsB5)
 ```
 
-### ### Loop for running analysis for each day separately EMM_B5
+### Loop for running analysis for each day separately EMM_B5
 
-```{r}
+```{r Loop of stat for each day for EMM_B5}
 # Unique days
 day <- unique(B5.no.1st.data$DAI)
 # Initialize empty lists to store results
@@ -378,7 +385,7 @@ for (i in seq_along(day)) {
                                           Letters = letters, reversed = TRUE,
                                           details = TRUE)
    # Print lsmeans results
-  print(Results_lsmeansB5[[i]])
+ # print(Results_lsmeansB5[[i]])
   
   # Filter comparisons involving "Control"
   filtered_comparisonsB5[[i]] <- Results_lsmeansB5[[i]]$comparisons %>%
@@ -389,11 +396,11 @@ for (i in seq_along(day)) {
 
 ```
 
-# *Xanthomonas perforans* AL65
+## ***Xanthomonas perforans* AL65**
 
-```{r}
+```{r Plot for AL65}
 #read data
-AL65 <- read.csv("PeaceAssay/2024-08-09_PeaceAssay_AL65.csv", na.strings = "na") 
+AL65 <- read.csv("PeaceAssay/PeaceAssayData/2024-08-09_PeaceAssay_AL65.csv", na.strings = "na") 
 #load cbb color palette
 cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 str(AL65)
@@ -458,20 +465,18 @@ print(final_plotAL65)
 
 ### Stats for *Xanthomonas perforans* AL65
 
-```{r}
+```{r Stats for AL65}
 AL65.no.1st.data <- AL65.no.contact[AL65.no.contact$DAI != "2",]
 AL65try <- lme(increase~DAI*distance_to_yeast*Yeast, data = AL65.no.1st.data, random = ~1|Replication, na.action = na.omit)
-summary(AL65try)
 anova(AL65try)
 
 resultsAL65=lme(increase~DAI*distance_to_yeast+Yeast, data = AL65.no.1st.data, random = ~1|Replication, na.action = na.omit)
 summary(resultsAL65)
-#Anova(resultsB5)
 anova(resultsAL65)
 ```
 
 ### Loop for running analysis for each day separately for AL65
-```{r}
+```{r Loop of stat for each day for AL65}
 # Unique days
 day <- unique(AL65.no.1st.data$DAI)
 # Initialize empty lists to store results
@@ -500,7 +505,7 @@ for (i in seq_along(day)) {
                                           Letters = letters, reversed = TRUE,
                                           details = TRUE)
    # Print lsmeans results
-  print(Results_lsmeansAL65[[i]])
+  #print(Results_lsmeansAL65[[i]])
   
   # Filter comparisons involving "Control"
   filtered_comparisonsAL65[[i]] <- Results_lsmeansAL65[[i]]$comparisons %>%
@@ -512,10 +517,11 @@ for (i in seq_along(day)) {
 ```
 
 
-# *Hymenobacter polaris* EMM_B17
-```{r}
+## ***Hymenobacter polaris* EMM_B17**
+
+```{r Plot for EMM_B17}
 #read data
-B17 <- read.csv("PeaceAssay/2024-07-17_PeaceAssay_B17.csv", na.strings = "na") 
+B17 <- read.csv("PeaceAssay/PeaceAssayData/2024-07-17_PeaceAssay_B17.csv", na.strings = "na") 
 
 
 #load cbb color palette
@@ -574,11 +580,10 @@ final_plotB17 <- annotate_figure(combined_plotB17,
 print(final_plotB17)
 ```
 
-## Stats for *Hymenobacter polaris* EMM_B17
-```{r}
+### Stats for *Hymenobacter polaris* EMM_B17
+```{r Stats for EMM_B17}
 B17.no.1st.data <- B17.no.contact[B17.no.contact$DAI != "2",]
 B17try <- lme(increase~DAI*distance_to_yeast*Yeast, data = B17.no.1st.data, random = ~1|Replication, na.action = na.omit)
-summary(B17try)
 anova(B17try)
 
 resultsB17=lme(increase~DAI+distance_to_yeast*Yeast, data = B17.no.1st.data, random = ~1|Replication, na.action = na.omit)
@@ -589,7 +594,7 @@ anova(resultsB17)
 
 ### Loop for running analysis for each day separately for EMM_B17
 
-```{r}
+```{r Loop of stat for each day for EMM_B17}
 # Unique days
 day <- unique(B17.no.1st.data$DAI)
 # Initialize empty lists to store results
@@ -618,7 +623,7 @@ for (i in seq_along(day)) {
                                           Letters = letters, reversed = TRUE,
                                           details = TRUE)
    # Print lsmeans results
-  print(Results_lsmeansB17[[i]])
+  #print(Results_lsmeansB17[[i]])
   
   # Filter comparisons involving "Control"
   filtered_comparisonsB17[[i]] <- Results_lsmeansB17[[i]]$comparisons %>%
@@ -630,11 +635,11 @@ for (i in seq_along(day)) {
 ```
 
 
-# *Methylobacterium platani* EMM_B52
+## ***Methylobacterium platani* EMM_B52**
 
-```{r}
+```{r Plot for EMM_B52}
 #read data
-B52 <- read.csv("PeaceAssay/MergedB52.csv", na.strings = "na") 
+B52 <- read.csv("PeaceAssay/PeaceAssayData/MergedB52.csv", na.strings = "na") 
 #load cbb color palette
 cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 str(B52)
@@ -696,10 +701,9 @@ print(final_plotB52)
 
 ### Stats *Methylobacterium platanii* EMM_B52
 
-```{r}
+```{r Stats for EMM_B52}
 B52.no.1st.data <- B52.no.contact[B52.no.contact$DAI != "2",]
 B52try <- lme(increase~distance_to_yeast*DAI*Yeast, data = B52.no.1st.data, random = ~1|Replication, na.action = na.omit)
-summary(B52try)
 anova(B52try)
 
 resultsB52=lme(increase~DAI+distance_to_yeast*Yeast+DAI*Yeast, data = B52.no.1st.data, random = ~1|Replication, na.action = na.omit)
@@ -709,7 +713,7 @@ anova(resultsB52)
 ```
 
 ### Loop for running analysis for each day separately for EMM_B52
-```{r}
+```{r Loop of stat for each day for EMM_B44}
 # Unique days
 day <- unique(B52.no.1st.data$DAI)
 # Initialize empty lists to store results
@@ -738,7 +742,7 @@ for (i in seq_along(day)) {
                                            Letters = letters, reversed = TRUE,
                                            details = TRUE)
   # Print lsmeans results
-  print(Results_lsmeansB52[[i]])
+  #print(Results_lsmeansB52[[i]])
   
   # Filter comparisons involving "Control"
   filtered_comparisonsB52[[i]] <- Results_lsmeansB52[[i]]$comparisons %>%

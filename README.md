@@ -40,7 +40,7 @@ Each replicate includes 2 bacterial colonies measured inoculated in the Split-Pl
 The analyses were conducted in R, using tidyverse-based data wrangling and statistical modeling tools:
 
 - **Data Cleaning and Processing:** 
-    - [dplyr::filter()](https://cran.r-project.org/web/packages/dplyr/index.html) for cleaning and filtering data
+    - [dplyr(version 1.1.4)](https://cran.r-project.org/web/packages/dplyr/index.html) for cleaning and filtering data
     - [tidyverse (version 2.0.0)](https://github.com/tidyverse/tidyverse/releases/tag/v2.0.0) for %>% function
 
 - **Data visualtization:** 
@@ -53,12 +53,12 @@ The analyses were conducted in R, using tidyverse-based data wrangling and stati
 
 - **Statistical Testing:** 
   - [rstatix(version 0.7.2)](https://cran.r-project.org/web/packages/rstatix/index.html)
-  - [car(version 3.1-3)](https://cran.r-project.org/web/packages/car/index.html) for running ANOVA on the model. 
+  - [car(version 3.1-3)](https://cran.r-project.org/web/packages/car/index.html) for running ANOVA on the model
   - [emmeans(version 1.10.7)](https://cran.r-project.org/web/packages/emmeans/index.html) for running post-hoc tests
   - [multcomp(version 1.4-28)](https://cran.r-project.org/web/packages/multcomp/index.html) for pairwise comparison and 
   - [multcompView(version 0.1-10)](https://cran.r-project.org/web/packages/multcompView/index.html) generate significant letters
 
 
 📎 Citation
-Please cite this repository if you use or build upon this work. For details on data collection and experimental design, refer to the methods section in the accompanying publication (forthcoming).
+
 
