@@ -4,12 +4,33 @@ The interaction between 16 different yeast isolates belonging to various classes
 ## Co-Culture Plate Assay
  Each plate contained eight 3 μl drops of yeast and bacteria arranged in diagonal rows positioned at increasing distances inside a 100 mm petri dish containing YePD agar medium, forming the shape of a “V”. At the apex, the microbe drops were placed in direct contact to determine any contact-dependent interactions. At the same time, the distance between colonies increased as the drops diverged to determine contact-independent interactions, such as diffusible compounds or volatile interactions. 
  
+ | Column Name                 | Type        | Description                                                        |
+|----------------------------|-------------|--------------------------------------------------------------------|
+| `Treatment`                | Categorical | Combination of yeast and bacteria tested                          |
+| `Replication`              | Categorical | Biological replicate identifier                                    |
+| `ColonyDiameter`           | Continuous  | Measured diameter of bacterial colony (mm)                         |
+| `DAI`                      | Categorical | Days after inoculation                                             |
+| `Distance`                 | Categorical | Distance between yeast and bacterial colony on the plate          |
+| ⬇️ **Each row = one colony** |             | Each replicate has 8 colonies measured at different distances      |
+
 ## In-vitro Split Plate Assay
 This was done for the confirmation of the volatile interactions. Since the previous co-culture experiment could not rule out the role of volatiles versus agar diffusible compounds, we repeated selected interactions inside 100 mm Petri dishes with a bifurcation, which physically separated the yeast from the bacterium, thus only allowing interactions via volatile metabolites. Since the Methylobacterium platani had a prominent impact due to yeast volatiles we moved forward with Methylobacterum with its most interaction with the yeast.
+
+| Column Name                 | Type        | Description                                                        |
+|----------------------------|-------------|--------------------------------------------------------------------|
+| `Treatment`                | Categorical | Yeast-bacteria treatment combination                               |
+| `Replication`              | Categorical | Biological replicate identifier                                    |
+| `DAI`                      | Categorical | Days after inoculation                                             |
+| `ColonyDiameter`           | Continuous  | Diameter of bacterial colony (mm)                                  |
+| `ColonyWeight`             | Continuous  | Weight of bacterial colony (mg)                                    |
+| `CFU`                      | Continuous  | Colony Forming Units, bacterial count estimate                     |
+| ⬇️ **Each row = one colony** |             | Each replicate includes 2 colonies measured                        |
 
 
 ## 📊 Statistical Analysis Workflow
 The analyses were conducted in R, using tidyverse-based data wrangling and statistical modeling tools:
+
+
 
 Data Cleaning: dplyr, tidyr
 
@@ -36,7 +57,7 @@ Figures and tables for publication
 🔁 Reproducibility
 All Excel files are converted to .csv for compatibility and ease of import.
 
-Code is fully annotated for clarity.
+- Code is fully annotated for clarity.
 
 Versioning is maintained via Git.
 
