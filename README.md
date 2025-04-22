@@ -1,7 +1,7 @@
 # 🧫 In-Vitro-Plate-Assay
 The interaction between 16 different yeast isolates belonging to various classes of basidiomycetes yeasts and six different bacterial isolates, isolated from various hosts, was studied using a specialized in-vitro plate assay. This assay was designed to identify different types of interactions, including contact-dependent, distance-dependent (via agar-diffusible compounds), and distance-independent (via volatile compounds) interactions. To assess that following type of assays were conducted.  
 
-## Co-Culture Plate Assay
+## [Co-Culture Plate Assay]((PeaceAssay/PeaceAssay.Rmd))
 Each plate contained eight 3 μl drops of yeast and bacteria arranged in diagonal rows positioned at increasing distances inside a 100 mm petri dish containing YePD agar medium, forming the shape of a “V”. At the apex, the microbe drops were placed in direct contact to determine any contact-dependent interactions. At the same time, the distance between colonies increased as the drops diverged to determine contact-independent interactions, such as diffusible compounds or volatile interactions. 
 
 I have different dataset for each bacteria. Each dataset is in the following data structure.
@@ -19,9 +19,8 @@ I have different dataset for each bacteria. Each dataset is in the following dat
 
 Each replicate has 8 bacterial colonies measured present at different distances from 8 colonies of yeast.
 
-### [Code for Co-Culture Assay Analysis](PeaceAssay/PeaceAssay.Rmd)
 
-## In-vitro Split Plate Assay
+## [In-vitro Split Plate Assay](SplitPlate/SplitPlate.Rmd)
 This was done for the confirmation of the volatile interactions. Since the previous co-culture experiment could not rule out the role of volatiles versus agar diffusible compounds, we repeated selected interactions inside 100 mm Petri dishes with a bifurcation, which physically separated the yeast from the bacterium, thus only allowing interactions via volatile metabolites. Two colonies were inoculated in one compartment and other compartment is mass streaked with the yeast isolate or left uninoculated (in case of Control). Since the *Methylobacterium platanii* EMM_B52 had a prominent impact due to yeast volatiles we moved forward with *Methylobacterium platanii* EMM_B52 that faced most prominent impact in the presence of yeast.
 
 Two biological replicate was conducted for this experiment and each replicate has different dataset. Each dataset is in the following data structure. 
@@ -39,7 +38,6 @@ Two biological replicate was conducted for this experiment and each replicate ha
 
 Each replicate includes 2 bacterial colonies measured inoculated in the Split-Plate
 
-### [Code for Split-Plate Assay Analysis](SplitPlate/SplitPlate.Rmd)
 
 ## **📊 Statistical Analysis Workflow**
 The analyses were conducted in R, using tidyverse-based data wrangling and statistical modeling tools:
