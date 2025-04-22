@@ -58,7 +58,7 @@ All data analyses, including appropriate statistical methods and publication-qua
 - **Statistical Testing:** 
   - [rstatix(version 0.7.2)](https://cran.r-project.org/web/packages/rstatix/index.html)
   - [car(version 3.1-3)](https://cran.r-project.org/web/packages/car/index.html) for running ANOVA on the model
-  - [emmeans(version 1.10.7)](https://cran.r-project.org/web/packages/emmeans/index.html) for running post-hoc tests
+  - [emmeans(version 1.10.7)](https://cran.r-project.org/web/packages/emmeans/index.html) for running Tukey's post-hoc tests
   - [multcomp(version 1.4-28)](https://cran.r-project.org/web/packages/multcomp/index.html) for pairwise comparison 
   - [multcompView(version 0.1-10)](https://cran.r-project.org/web/packages/multcompView/index.html) generate significant letters
 
