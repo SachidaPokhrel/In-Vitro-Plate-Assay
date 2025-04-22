@@ -40,7 +40,7 @@ Each replicate includes 2 bacterial colonies measured inoculated in the Split-Pl
 
 
 ## **📊 Statistical Analysis Workflow**
-The analyses were conducted in R, using tidyverse-based data wrangling and statistical modeling tools:
+All data analyses, including appropriate statistical methods and publication-quality figures generation, were performed using R.
 
 - **Data Cleaning and Processing:** 
     - [dplyr(version 1.1.4)](https://cran.r-project.org/web/packages/dplyr/index.html) for cleaning and filtering data
@@ -62,7 +62,8 @@ The analyses were conducted in R, using tidyverse-based data wrangling and stati
   - [multcompView(version 0.1-10)](https://cran.r-project.org/web/packages/multcompView/index.html) generate significant letters
 
 
-📎 Citation
+## **📎 Citation**
+
 [![DOI](https://zenodo.org/badge/923872561.svg)](https://doi.org/10.5281/zenodo.15258662)
 
 
