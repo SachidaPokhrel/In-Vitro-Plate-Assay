@@ -46,9 +46,10 @@ All data analyses, including appropriate statistical methods and publication-qua
     - [dplyr(version 1.1.4)](https://cran.r-project.org/web/packages/dplyr/index.html) for cleaning and filtering data
     - [tidyverse (version 2.0.0)](https://github.com/tidyverse/tidyverse/releases/tag/v2.0.0) for %>% function
 
-- **Data visualtization:** 
+- **Data Visualization:** 
   - [cbbPallete](https://ghurault.github.io/HuraultMisc/reference/cbbPalette.html) was used for Color blind palette
-  - [ggplot2(version 3.5.1)](https://cloud.r-project.org/web/packages/ggplot2/index.html) and [ggpubr(version 0.6.0)](https://cran.r-project.org/web/packages/ggpubr/index.html) for generating boxplot and line graph visualization
+  - [ggplot2(version 3.5.1)](https://cloud.r-project.org/web/packages/ggplot2/index.html) for generating plots
+  - [ggpubr(version 0.6.0)](https://cran.r-project.org/web/packages/ggpubr/index.html) for combining plots into one single plot
 
 - **Modeling:** 
   - lm() from baseR for linear model
