@@ -63,10 +63,6 @@ All data analyses, including appropriate statistical methods and publication-qua
   - [multcompView(version 0.1-10)](https://cran.r-project.org/web/packages/multcompView/index.html) generate significant letters
 
 
-## **📎 Citation**
-
-[![DOI](https://zenodo.org/badge/923872561.svg)](https://doi.org/10.5281/zenodo.15258662)
-
 ## **📝 File Tree and Organization**
 
 ```
@@ -90,3 +86,7 @@ All data analyses, including appropriate statistical methods and publication-qua
         ├── 2024-09-16_SplitPlate_B52.csv
         └── 2024-11-11_SplitPlate_B52-1.csv
 ```
+
+## **📎 Citation**
+
+[![DOI](https://zenodo.org/badge/923872561.svg)](https://doi.org/10.5281/zenodo.15258662)
