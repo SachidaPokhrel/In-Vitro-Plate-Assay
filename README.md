@@ -68,6 +68,8 @@ All data analyses, including appropriate statistical methods and publication-qua
 [![DOI](https://zenodo.org/badge/923872561.svg)](https://doi.org/10.5281/zenodo.15258662)
 
 ## **📝 File Tree and Organization**
+
+```
 .
 ├── In-Vitro-Plate-Assay.Rproj
 ├── LICENSE
@@ -87,4 +89,4 @@ All data analyses, including appropriate statistical methods and publication-qua
     └── SplitPlateData
         ├── 2024-09-16_SplitPlate_B52.csv
         └── 2024-11-11_SplitPlate_B52-1.csv
-
+```
