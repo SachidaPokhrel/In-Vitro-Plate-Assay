@@ -32207,6 +32207,3 @@ for (i in seq_along(day)) {
     ## 
     ## Degrees-of-freedom method: containment 
     ## P value adjustment: tukey method for comparing a family of 17 estimates
-
-All significant letters will be assigned after the data is exported into
-pdf format for specific annotation on the plot.

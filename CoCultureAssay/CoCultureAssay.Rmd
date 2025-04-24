@@ -3,11 +3,11 @@ title: "Co-Culture Assay"
 author: "Sachida Pokhrel"
 date: "2025-04-18"
 output: 
-  md_document:
-    variant: gfm
   html_document:
     toc: TRUE
     toc_float: TRUE
+  md_document:
+    variant: gfm
 ---
 ## Things to know before Analysis
 
@@ -127,6 +127,7 @@ anova(resultsB44) #for overall x variables
 
 ### Loop for running analysis for each day separately for EMM_B44
 Days after inoculation (DAI) as a factor is always significantly impacting the growth. Also, our plot will represent data for Day 6 thus we want relevant stats and comparison on Day 6 to present in the plot. So, loop was made for each Day data and removing DAI from the model and keeping rest of it present. 
+
 ```{r loop of stat for each day for EMM_B44}
 # Extract all the unique days to be used for iteration in for loop
 day <- unique(B44.no.1st.data$DAI)
