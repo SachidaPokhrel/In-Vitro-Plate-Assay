@@ -20,7 +20,7 @@ I have different dataset for each bacteria. Each dataset is in the following dat
 Each replicate has 8 bacterial colonies measured present at different distances from 8 colonies of yeast.
 
 
-## [In-vitro Split Plate Assay](Splitplate/Splitplate.Rmd)
+## [In-vitro Split Plate Assay](SplitPlate/Splitplate.Rmd)
 This was done for the confirmation of the volatile interactions. Since the previous co-culture experiment could not rule out the role of volatiles versus agar diffusible compounds, we repeated selected interactions inside 100 mm Petri dishes with a bifurcation, which physically separated the yeast from the bacterium, thus only allowing interactions via volatile metabolites. Two colonies were inoculated in one compartment and other compartment is mass streaked with the yeast isolate or left uninoculated (in case of Control). Since the *Methylobacterium platanii* EMM_B52 had a prominent impact due to yeast volatiles we moved forward with *Methylobacterium platanii* EMM_B52 that faced most prominent impact in the presence of yeast.
 
 Two biological replicate was conducted for this experiment and each replicate has different dataset. Each dataset is in the following data structure. 
@@ -62,12 +62,26 @@ All data analyses, including appropriate statistical methods and publication-qua
   - [multcomp(version 1.4-28)](https://cran.r-project.org/web/packages/multcomp/index.html) for pairwise comparison 
   - [multcompView(version 0.1-10)](https://cran.r-project.org/web/packages/multcompView/index.html) generate significant letters
 
+## **🔁 Reproducibility**
+Use following links for reproducibility check!
+[Co-Culture Assay](CoCultureAssay/Co-Culture.Rmd)
+[In-Vitro Split Plate Assay](SplitPlate/Splitplate.Rmd)
 
 ## **📝 File Tree and Organization**
 
 ```
 .
 ├── CoCultureAssay                                  #Folder for Co-Culture Plate Assay
+│   ├── Co-CultureAssay.Rmd                         #Combined code for all bacteria data in one Markdown file for easy access
+│   ├── Co-CultureAssay.md                          #Github flavored markdown of combined code for all bacteria
+│   ├── Co-CultureAssay_files                       #output files for Combined code of Co-Culture Assay for all bacteria
+│   │   └── figure-gfm
+│   │       ├── Plot for AL65-1.png
+│   │       ├── Plot for EMM_B17-1.png
+│   │       ├── Plot for EMM_B30-1.png
+│   │       ├── Plot for EMM_B44-1.png
+│   │       ├── Plot for EMM_B5-1.png
+│   │       └── Plot for EMM_B52-1.png
 │   ├── AL65                                        #Sub-folder for bacteria AL65
 │   │   ├── AL65.md                                 #Github-flavored markdown for analysis on Co-culture assay of AL65
 │   │   ├── AL65.Rmd                                #Markdown for the analysis on Co-culture assay of AL65
