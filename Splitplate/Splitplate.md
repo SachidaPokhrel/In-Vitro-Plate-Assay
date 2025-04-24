@@ -106,7 +106,7 @@ head(BioRep1)
     ## 6        0            NA  NA
 
 ``` r
-#changing the data into categorical data
+#changing the variables into categorical data
 BioRep1$Replication=as.factor(BioRep1$Replication)
 BioRep1$Media=as.factor(BioRep1$Media)
 BioRep1$Yeast=as.factor(BioRep1$Yeast)
@@ -114,24 +114,6 @@ BioRep1$DAI=as.factor(BioRep1$DAI)
 ```
 
 ### Impact of Yeast on Colony Size
-
-``` r
-#plot data
-plot1 <- BioRep1 %>%
-  subset(Media=="YePDA") %>% #this data has 2 media types thus subset for YePDA
-  ggplot(aes(x = DAI, y = increase, group = Yeast, color = Yeast)) +
-  stat_summary(fun = mean, geom="line") +   
-  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.5) +  
-  ylab("increase in colony diameter (mm)") +   
-  xlab("Days after Inoculation") +   
-  theme_classic() +
-  scale_color_manual(values = cbbPalette) +
-  ggtitle("First Biological Replicate") +
-  theme(plot.title = element_text(hjust = 0.5))
-plot1
-```
-
-![](Splitplate_files/figure-gfm/Plot%20all%20data%20for%20colony%20size%20for%20Biological%20Replicate%201-1.png)<!-- -->
 
 ``` r
 #filter 1st data date and removing the 1st data since there was no growth associated with it. The data is considered to be the baseline for growth so since it violates the assumption of normality, we remove it from the analysis
@@ -344,7 +326,7 @@ colonysize1 <- filterdata1 %>%
 colonysize1
 ```
 
-![](Splitplate_files/figure-gfm/Analysis%20on%20increase%20in%20colony%20size%20and%20Plot%20for%20Biological%20replicate%201-1.png)<!-- -->
+![](Splitplate_files/figure-gfm/Increase%20in%20colony%20size%20Plot%20for%20Biological%20replicate%201-1.png)<!-- -->
 
 ### Impact of Yeast on Colony Weight
 
@@ -472,7 +454,7 @@ weightplot <- filterdata1_2 %>%
 colonyweightplot
 ```
 
-![](Splitplate_files/figure-gfm/Analysis%20on%20increase%20in%20colony%20weight%20and%20Plot%20for%20Biological%20Replicate%201-1.png)<!-- -->
+![](Splitplate_files/figure-gfm/Colony%20Weight%20Plot%20for%20Biological%20Replicate%201-1.png)<!-- -->
 
 ### Impact of Yeast on Colony Forming Unit (CFU)
 
@@ -607,7 +589,7 @@ CFU1PLOT
     ## Warning: Removed 120 rows containing missing values or values outside the scale range
     ## (`geom_point()`).
 
-![](Splitplate_files/figure-gfm/Analysis%20on%20Colony%20Forming%20Unit(CFU)%20and%20Plot%20for%20Biological%20Replicate%201-1.png)<!-- -->
+![](Splitplate_files/figure-gfm/Colony%20Forming%20Unit(CFU)%20Plot%20for%20Biological%20Replicate%201-1.png)<!-- -->
 
 ``` r
 #combining similar dataset plots into one
@@ -616,7 +598,8 @@ cw1andcfu1 <- ggarrange(colonyweightplot, CFU1PLOT, nrow = 1, ncol = 2, common.l
 
     ## Warning: Removed 120 rows containing non-finite outside the scale range
     ## (`stat_boxplot()`).
-    ## Removed 120 rows containing missing values or values outside the scale range
+
+    ## Warning: Removed 120 rows containing missing values or values outside the scale range
     ## (`geom_point()`).
 
 ``` r
@@ -624,7 +607,7 @@ cw1andcfu1 <- annotate_figure(cw1andcfu1, top = text_grob(expression(paste("Impa
 cw1andcfu1
 ```
 
-![](Splitplate_files/figure-gfm/Analysis%20on%20Colony%20Forming%20Unit(CFU)%20and%20Plot%20for%20Biological%20Replicate%201-2.png)<!-- -->
+![](Splitplate_files/figure-gfm/CFU%20and%20colony%20weight%20Combined%20Plot%20for%20Biological%20Replicate%201-1.png)<!-- -->
 
 ## Biological Replicate 2
 
@@ -660,30 +643,13 @@ head(BioRep2)
     ## 6      B52 EMM_F48           3   2            7.65        0            NA  NA
 
 ``` r
-#changing the data into categorical data
+#changing the variable into categorical data
 BioRep2$Replication=as.factor(BioRep2$Replication)
 BioRep2$Yeast=as.factor(BioRep2$Yeast)
 BioRep2$DAI=as.factor(BioRep2$DAI)
 ```
 
 ### Impact of Yeast on Colony Size
-
-``` r
-#making ggplot
-plot2 <- BioRep2 %>%
-  ggplot(aes(x = DAI, y = increase, group = Yeast, color = Yeast)) +
-  stat_summary(fun = mean,geom="line") +   
-  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.5) +  
-  ylab("increase in colony diameter (mm)") +   
-  xlab("Days after Inoculation") +   
-  theme_classic() +
-  scale_color_manual(values = cbbPalette) +
-  ggtitle("Second Biological Replicate") +
-  theme(plot.title = element_text(hjust = 0.5))
-plot2
-```
-
-![](Splitplate_files/figure-gfm/Plot%20all%20data%20for%20colony%20size%20for%20Biological%20Replicate%202-1.png)<!-- -->
 
 ``` r
 #removing the 1st data since there was no growth associated with it
@@ -889,7 +855,7 @@ colonysize2 <- filterdata2 %>%
 colonysize2
 ```
 
-![](Splitplate_files/figure-gfm/Analysis%20on%20increase%20in%20colony%20size%20and%20Plot%20for%20Biological%20Replicate%202-1.png)<!-- -->
+![](Splitplate_files/figure-gfm/Increase%20in%20colony%20size%20Plot%20for%20Biological%20Replicate%202-1.png)<!-- -->
 
 ### Impact of Yeast on Colony Weight
 
@@ -1000,7 +966,7 @@ weightplot <- filterdata2_2 %>%
     ## Joining with `by = join_by(Yeast)`
 
 ``` r
- colonyweightplot <- filterdata2_2 %>%
+ colonyweightplot2 <- filterdata2_2 %>%
   ggplot(aes(x = Yeast, y = colony_weight, group = Yeast, fill = Yeast)) +
   geom_boxplot()+
   geom_point(shape = 21, color = "black", position = position_jitterdodge(dodge.width = 0.9))+
@@ -1012,10 +978,10 @@ weightplot <- filterdata2_2 %>%
   theme(axis.title.x = element_text(size =25, face = "bold"), axis.title.y = element_text(size = 25, face = "bold"), axis.text.x=element_text(size=20, angle= 0), axis.text.y=element_text(size=20, angle= 0))+
   theme_classic() +
   theme(legend.position = "none")
-colonyweightplot
+colonyweightplot2
 ```
 
-![](Splitplate_files/figure-gfm/Analysis%20on%20increase%20in%20colony%20weight%20and%20Plot%20for%20Biological%20Replicate%202-1.png)<!-- -->
+![](Splitplate_files/figure-gfm/Colony%20weight%20plot%20for%20Biological%20Replicate%202-1.png)<!-- -->
 
 ### Impact of Yeast on Colony Forming Unit (CFU)
 
@@ -1146,16 +1112,17 @@ CFU2PLOT
     ## Warning: Removed 36 rows containing missing values or values outside the scale range
     ## (`geom_point()`).
 
-![](Splitplate_files/figure-gfm/Analysis%20on%20Colony%20Forming%20Unit(CFU)%20and%20Plot%20for%20Biological%20Replicate%202-1.png)<!-- -->
+![](Splitplate_files/figure-gfm/Colony%20Forming%20Unit(CFU)%20Plot%20for%20Biological%20Replicate%202-1.png)<!-- -->
 
 ``` r
 #combining similar dataset plots into one
-cw2andcfu2 <- ggarrange(colonyweightplot, CFU2PLOT, nrow = 1, ncol = 2, common.legend = F)
+cw2andcfu2 <- ggarrange(colonyweightplot2, CFU2PLOT, nrow = 1, ncol = 2, common.legend = F)
 ```
 
     ## Warning: Removed 36 rows containing non-finite outside the scale range
     ## (`stat_boxplot()`).
-    ## Removed 36 rows containing missing values or values outside the scale range
+
+    ## Warning: Removed 36 rows containing missing values or values outside the scale range
     ## (`geom_point()`).
 
 ``` r
@@ -1163,4 +1130,4 @@ cw2andcfu2 <- annotate_figure(cw2andcfu2, top = text_grob(expression(paste("Impa
 cw2andcfu2
 ```
 
-![](Splitplate_files/figure-gfm/Analysis%20on%20Colony%20Forming%20Unit(CFU)%20and%20Plot%20for%20Biological%20Replicate%202-2.png)<!-- -->
+![](Splitplate_files/figure-gfm/CFU%20and%20Colony%20weight%20Combined%20Plot%20for%20Biological%20Replicate%202-1.png)<!-- -->

@@ -3,11 +3,11 @@ title: "Split-Plate Assay"
 author: "Sachida Pokhrel"
 date: "2025-04-16"
 output: 
+  md_document:
+    variant: gfm
   html_document:
     toc: TRUE
     toc_float: TRUE
-  md_document:
-    variant: gfm
 ---
 
 ## Things to know before analysis
@@ -33,7 +33,7 @@ library(car)
 ```
 
 ## Biological Replicate 1
-```{r Read data and change factors for Biological Replicate 1}
+```{r Read data for Biological Replicate 1}
 #read data
 BioRep1 <- read.csv("Splitplate/SplitPlateData/2024-09-16_SplitPlate_B52.csv", na.strings = "na")
 #load the color palettes
@@ -41,7 +41,7 @@ cbbPalette <- c( "#E69F00", "#56B4E9", "#009E73", "#CC79A7")
 #check the structure and see the data
 str(BioRep1)
 head(BioRep1)
-#changing the data into categorical data
+#changing the variables into categorical data
 BioRep1$Replication=as.factor(BioRep1$Replication)
 BioRep1$Media=as.factor(BioRep1$Media)
 BioRep1$Yeast=as.factor(BioRep1$Yeast)
@@ -49,25 +49,8 @@ BioRep1$DAI=as.factor(BioRep1$DAI)
 ```
 
 ### Impact of Yeast on Colony Size
-```{r Plot all data for colony size for Biological Replicate 1}
-#plot data
-plot1 <- BioRep1 %>%
-  subset(Media=="YePDA") %>% #this data has 2 media types thus subset for YePDA
-  ggplot(aes(x = DAI, y = increase, group = Yeast, color = Yeast)) +
-  stat_summary(fun = mean, geom="line") +   
-  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.5) +  
-  ylab("increase in colony diameter (mm)") +   
-  xlab("Days after Inoculation") +   
-  theme_classic() +
-  scale_color_manual(values = cbbPalette) +
-  ggtitle("First Biological Replicate") +
-  theme(plot.title = element_text(hjust = 0.5))
-plot1
 
-```
-
-
-```{r Analysis on increase in colony size and Plot for Biological replicate 1}
+```{r Increase in colony size Plot for Biological replicate 1}
 #filter 1st data date and removing the 1st data since there was no growth associated with it. The data is considered to be the baseline for growth so since it violates the assumption of normality, we remove it from the analysis
 
 filterdata1 <-BioRep1[BioRep1$Media == "YePDA"& BioRep1$DAI != 2,]
@@ -125,7 +108,7 @@ colonysize1
 
 ### Impact of Yeast on Colony Weight
 
-```{r Analysis on increase in colony weight and Plot for Biological Replicate 1}
+```{r Colony Weight Plot for Biological Replicate 1}
 #filter data to avoid other data except of last day since it was detructive sample taking procedure and colony was taken out from the plate to measure the weight on the last day of data collection.
 
 filterdata1_2 <- filterdata1 %>% 
@@ -176,7 +159,7 @@ colonyweightplot
 
 ### Impact of Yeast on Colony Forming Unit (CFU) 
 
-```{r Analysis on Colony Forming Unit(CFU) and Plot for Biological Replicate 1}
+```{r Colony Forming Unit(CFU) Plot for Biological Replicate 1}
 #stats used for colony forming unit
 cfu1=lme(log10(CFU)~Yeast,data = filterdata1_2, random = ~1|Replication, na.action = na.omit) 
 summary(cfu1)
@@ -223,7 +206,10 @@ CFU1PLOT <- filterdata1 %>%
   #ggtitle("Impact of Yeast on Growth of Methylobacterium platani EMM_B52") +
   #theme(plot.title = element_text(hjust = 0.5))
 CFU1PLOT
+```
 
+
+```{r CFU and colony weight Combined Plot for Biological Replicate 1}
 #combining similar dataset plots into one
 cw1andcfu1 <- ggarrange(colonyweightplot, CFU1PLOT, nrow = 1, ncol = 2, common.legend = F)
   
@@ -233,7 +219,7 @@ cw1andcfu1
 
 ## Biological Replicate 2
 
-```{r Load data and change factor for Biological Replicate 2}
+```{r Load data for Biological Replicate 2}
 #read data
 BioRep2 <- read.csv("Splitplate/SplitPlateData/2024-11-11_SplitPlate_B52-1.csv", na.strings = "na")
 #load the color palettes
@@ -241,7 +227,7 @@ cbbPalette <- c( "#E69F00", "#56B4E9", "#009E73", "#CC79A7")
 #check the structure and see the data
 str(BioRep2)
 head(BioRep2)
-#changing the data into categorical data
+#changing the variable into categorical data
 BioRep2$Replication=as.factor(BioRep2$Replication)
 BioRep2$Yeast=as.factor(BioRep2$Yeast)
 BioRep2$DAI=as.factor(BioRep2$DAI)
@@ -249,23 +235,7 @@ BioRep2$DAI=as.factor(BioRep2$DAI)
 
 ### Impact of Yeast on Colony Size 
 
-```{r Plot all data for colony size for Biological Replicate 2}
-#making ggplot
-plot2 <- BioRep2 %>%
-  ggplot(aes(x = DAI, y = increase, group = Yeast, color = Yeast)) +
-  stat_summary(fun = mean,geom="line") +   
-  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.5) +  
-  ylab("increase in colony diameter (mm)") +   
-  xlab("Days after Inoculation") +   
-  theme_classic() +
-  scale_color_manual(values = cbbPalette) +
-  ggtitle("Second Biological Replicate") +
-  theme(plot.title = element_text(hjust = 0.5))
-plot2
-
-```
-
-```{r Analysis on increase in colony size and Plot for Biological Replicate 2}
+```{r Increase in colony size Plot for Biological Replicate 2}
 #removing the 1st data since there was no growth associated with it
 #the data is considered to be the baseline for growth so since it violates the assumption of normality, we remove it from the analysis. For this Day 10 data was also collected. Thus, for consistency, we remove the data for visualization and analysis.
 filterdata2 <-BioRep2 %>% 
@@ -323,7 +293,7 @@ colonysize2
 
 ### Impact of Yeast on Colony Weight
 
-```{r Analysis on increase in colony weight and Plot for Biological Replicate 2}
+```{r Colony weight plot for Biological Replicate 2}
 #filter data to avoid other data except 
 filterdata2_2 <- BioRep2 %>% 
   filter(DAI == "10" )
@@ -354,7 +324,7 @@ weightplot <- filterdata2_2 %>%
     se = sd(colony_weight)/sqrt(3)) %>%
   left_join(sig.diff.letters) 
 
- colonyweightplot <- filterdata2_2 %>%
+ colonyweightplot2 <- filterdata2_2 %>%
   ggplot(aes(x = Yeast, y = colony_weight, group = Yeast, fill = Yeast)) +
   geom_boxplot()+
   geom_point(shape = 21, color = "black", position = position_jitterdodge(dodge.width = 0.9))+
@@ -366,12 +336,12 @@ weightplot <- filterdata2_2 %>%
   theme(axis.title.x = element_text(size =25, face = "bold"), axis.title.y = element_text(size = 25, face = "bold"), axis.text.x=element_text(size=20, angle= 0), axis.text.y=element_text(size=20, angle= 0))+
   theme_classic() +
   theme(legend.position = "none")
-colonyweightplot
+colonyweightplot2
 ```
 
 ### Impact of Yeast on Colony Forming Unit (CFU)
 
-```{r Analysis on Colony Forming Unit(CFU) and Plot for Biological Replicate 2}
+```{r Colony Forming Unit(CFU) Plot for Biological Replicate 2}
 #stats used for colony forming unit
 cfu2=lme(log10(CFU)~Yeast,data = filterdata2_2, random = ~1|Replication, na.action = na.omit) 
 summary(cfu2)
@@ -414,9 +384,11 @@ CFU2PLOT <- filterdata2_2 %>%
   theme_classic() +
   theme(legend.position = "none")
 CFU2PLOT
+```
 
+```{r CFU and Colony weight Combined Plot for Biological Replicate 2}
 #combining similar dataset plots into one
-cw2andcfu2 <- ggarrange(colonyweightplot, CFU2PLOT, nrow = 1, ncol = 2, common.legend = F)
+cw2andcfu2 <- ggarrange(colonyweightplot2, CFU2PLOT, nrow = 1, ncol = 2, common.legend = F)
   
 cw2andcfu2 <- annotate_figure(cw2andcfu2, top = text_grob(expression(paste("Impact of Yeast on Growth of ", italic("Methylobacterium platani"), " EMM_B52 (Biological Replicate 2)")), color = "Blue2", size = 12, face = "bold", hjust = 0.5))
 cw2andcfu2

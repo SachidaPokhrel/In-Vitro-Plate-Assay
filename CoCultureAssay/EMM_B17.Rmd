@@ -1,0 +1,159 @@
+---
+title: "EMM_B17"
+author: "Sachida Pokhrel"
+date: "2025-04-24"
+output: 
+  md_document:
+    variant: gfm
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+---
+## Things to know before Analysis
+
+***This is applied for all the dataset for Co-culture Assay***
+
+- One .csv file is loaded for one bacteria interacting with multiple yeast isolates
+- There are three R chunks for each bacterial data. 
+- There are 16 different yeast interacting with one bacteria. So, to make it more clear in the plot and to make it less cumbersome, these yeast isolates are further categorised into 4 Yeast classes. 
+- There are 8 colonies of yeast and 8 colonies of bacteria at different distances in one plate. Data is taken only for bacterial colony size which reflects the impact of yeast on bacteria.
+- Plots have multiple line graphs, thus the significant letters are not assigned through code and will be added later after exporting the plot.
+
+```{r Load necessary libraries}
+#load necessary library
+library(ggplot2)
+library(tidyverse)
+library(ggpubr)
+library(rstatix)
+library(gvlma)
+library(agricolae)
+library(emmeans)
+library(multcompView)
+library(dplyr)
+library(stringr)
+library(tidyverse)
+library(car)
+library(nlme)
+```
+
+## ***Hymenobacter polaris* EMM_B17**
+Plot is generated using loop around the 4 different classes of yeast, coming up with 4 plots as an output which will be combined in one plot.
+
+```{r Plot for EMM_B17}
+#read data
+B17 <- read.csv("CoCultureAssay/CoCultureAssayData/2024-07-17_PeaceAssay_B17.csv", na.strings = "na") 
+
+
+#load cbb color palette
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+str(B17)
+#round off of the distance to yeast so that it is visibly a categorical variable
+B17$distance_to_yeast <- round(B17$distance_to_yeast, 0)
+#change into categorical dataset
+B17$Replication=as.factor(B17$Replication)
+B17$Yeast=as.factor(B17$Yeast)
+B17$DAI=as.factor(B17$DAI)
+B17$distance_to_yeast=as.factor(B17$distance_to_yeast)
+
+#remove the data for the distance zero
+B17.no.contact <- B17[B17$distance_to_yeast != 0, ]
+head(B17.no.contact)
+
+# remove data first data since it is a reference for increase in colony size and donot follow the assumption of linear model i.e. normal distributuion
+B17.Day6 <- B17.no.contact[B17.no.contact$DAI == "6",]
+
+
+plot_listB17 <- list()
+
+# Get unique classes
+unique_class <- unique(B17.Day6$Class[B17.Day6$Class != "Control"])
+
+# Loop through each class
+for (i in seq_along(unique_class)) {
+  
+  # Filter for Control and the current class
+  data <- B17.Day6 %>%
+    filter(Class %in% c("Control", unique_class[i]))
+  
+  # Generate the plot
+  p <- ggplot(data, aes(x = distance_to_yeast, y = increase, group = Yeast, color = Yeast)) +
+    stat_summary(fun = mean, geom = "line") +   
+    stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.5) +   
+    ylab("Increase in colony diameter (mm)") +   
+    xlab("Distance to Yeast (mm)") +   
+    theme_classic() +
+    scale_color_manual(values = cbbPalette) +
+    ggtitle(unique_class[i]) +
+    theme(plot.title = element_text(hjust = 0.5))
+  
+  # Store the plot
+  plot_listB17[[i]] <- p
+}
+
+combined_plotB17 <- ggarrange(plotlist = plot_listB17, ncol = 2, nrow = 2, common.legend = FALSE)
+
+# Annotation for the title
+final_plotB17 <- annotate_figure(combined_plotB17,
+                                top = text_grob(
+    expression("Impact on growth of"~italic("Hymenobacter polaris")~"EMM_B17 by Yeast"), face = "bold", color = "Blue2", size = 14, hjust = 0.5))
+
+print(final_plotB17)
+```
+
+### Stats for *Hymenobacter polaris* EMM_B17
+We are using linear mixed model. Our dependent variable or y is increase (increase in colony diameter from 1st data) and independent variables are different Yeast isolates, days after inoculation (DAI), and distance to yeast which is the distance between the yeast and bacterial colony in the plate. Each plate is replicated 3 times. 
+```{r Stats for EMM_B17}
+#filter data to remove 1st day data since the first data is taken as a base to measure the increase in colony size to rule out the variability that is caused by the drop inoculation. So, initially the increase in the colony diameter for 1st data for all colony is "0" that violates the assumption of normality, thus we remove that from analysis. This would be similar for all the bacterial isolates.
+# Unique days
+B17.no.1st.data <- B17.no.contact[B17.no.contact$DAI != "2",]
+B17try <- lme(increase~DAI*distance_to_yeast*Yeast, data = B17.no.1st.data, random = ~1|Replication, na.action = na.omit)
+anova(B17try)
+
+resultsB17=lme(increase~DAI+distance_to_yeast*Yeast, data = B17.no.1st.data, random = ~1|Replication, na.action = na.omit)
+summary(resultsB17)
+#Anova(resultsB5)
+anova(resultsB17)
+```
+
+### Loop for running analysis for each day separately for EMM_B17
+Days after inoculation (DAI) as a factor is always significantly impacting the growth. Also, our plot will represent data for Day 6 thus we want relevant stats and comparison on Day 6 to present in the plot. So, loop was made for each Day data and removing DAI from the model and keeping rest of it present. 
+
+```{r Loop of stat for each day for EMM_B17}
+day <- unique(B17.no.1st.data$DAI)
+# Initialize empty lists to store results
+B17_Day <- list()
+meansB17_Day <- list()
+resultsB17_Day <- list()
+model_summary_B17 <- list()
+anova_table_B17 <- list()
+Results_lsmeansB17 <- list()
+filtered_comparisonsB17 <- list()
+
+for (i in seq_along(day)) {
+    # Filter data for the current day
+  B17_Day[[i]] <- filter(B17.no.1st.data, DAI == day[i])
+    # Fit the mixed effects model
+  resultsB17_Day[[i]] <- lme(increase ~ distance_to_yeast * Yeast,
+                            data = B17_Day[[i]],
+                            random = ~1 | Replication,
+                            na.action = na.omit)
+    model_summary_B17[[i]] <- summary(resultsB17_Day[[i]])
+  anova_table_B17[[i]] <- anova(resultsB17_Day[[i]])
+   # Estimated marginal means
+  meansB17_Day[[i]] <- emmeans(resultsB17_Day[[i]], ~ Yeast | distance_to_yeast)
+    # Compact letter display with Tukey adjustment
+  Results_lsmeansB17[[i]] <- multcomp::cld(meansB17_Day[[i]], alpha = 0.05,
+                                          Letters = letters, reversed = TRUE,
+                                          details = TRUE)
+   # Print lsmeans results
+  #print(Results_lsmeansB17[[i]])
+  
+  # Filter comparisons involving "Control"
+  filtered_comparisonsB17[[i]] <- Results_lsmeansB17[[i]]$comparisons %>%
+    filter(grepl("Control", contrast))
+   # Print filtered contrasts
+  print(filtered_comparisonsB17[[i]])
+}
+
+```
+
