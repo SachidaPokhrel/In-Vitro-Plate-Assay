@@ -44,8 +44,6 @@ library(rstatix)
     ##     filter
 
 ``` r
-library(gvlma)
-library(agricolae)
 library(emmeans)
 ```
 
@@ -54,10 +52,34 @@ library(emmeans)
     ## See '? untidy'
 
 ``` r
+library(multcomp)
+```
+
+    ## Loading required package: mvtnorm
+    ## Loading required package: survival
+    ## Loading required package: TH.data
+    ## Loading required package: MASS
+    ## 
+    ## Attaching package: 'MASS'
+    ## 
+    ## The following object is masked from 'package:rstatix':
+    ## 
+    ##     select
+    ## 
+    ## The following object is masked from 'package:dplyr':
+    ## 
+    ##     select
+    ## 
+    ## 
+    ## Attaching package: 'TH.data'
+    ## 
+    ## The following object is masked from 'package:MASS':
+    ## 
+    ##     geyser
+
+``` r
 library(multcompView)
 library(dplyr)
-library(stringr)
-library(tidyverse)
 library(car)
 ```
 
