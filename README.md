@@ -1,7 +1,7 @@
 # 🧫 In-Vitro-Plate-Assay
 The interaction between 16 different yeast isolates belonging to various classes of basidiomycetes yeasts and six different bacterial isolates, isolated from various hosts, was studied using a specialized in-vitro plate assay. This assay was designed to identify different types of interactions, including contact-dependent, distance-dependent (via agar-diffusible compounds), and distance-independent (via volatile compounds) interactions. To assess that following type of assays were conducted.  
 
-## [Co-Culture Plate Assay](PeaceAssay/PeaceAssay.Rmd)
+## [Co-Culture Plate Assay](CoCultureAssay/CoCultureAssay.Rmd)
 Each plate contained eight 3 μl drops of yeast and bacteria arranged in diagonal rows positioned at increasing distances inside a 100 mm petri dish containing YePD agar medium, forming the shape of a “V”. At the apex, the microbe drops were placed in direct contact to determine any contact-dependent interactions. At the same time, the distance between colonies increased as the drops diverged to determine contact-independent interactions, such as diffusible compounds or volatile interactions. 
 
 I have different dataset for each bacteria. Each dataset is in the following data structure.
@@ -69,9 +69,9 @@ All data analyses, including appropriate statistical methods and publication-qua
 .
 ├── In-Vitro-Plate-Assay.Rproj
 ├── LICENSE
-├── PeaceAssay
-│   ├── PeaceAssay.Rmd
-│   └── PeaceAssayData
+├── CoCultureAssay
+│   ├── CoCultureAssay.Rmd
+│   └── CoCultureAssayData
 │       ├── 2024-07-07_PeaceAssay_B52.csv
 │       ├── 2024-07-17_PeaceAssay_B17.csv
 │       ├── 2024-07-21_PeaceAssay_B30.csv

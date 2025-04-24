@@ -2,8 +2,20 @@
 title: "Split-Plate Assay"
 author: "Sachida Pokhrel"
 date: "2025-04-16"
-output: html_document
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+  md_document:
+    variant: gfm
 ---
+
+## Things to know before analysis
+
+***This is applied to both replicate***
+
+- Independent variable is colony diameter, colony weight and colony forming Unit
+- Dependent variable is DAI (Days after Inoculation) in case of diameter, yeast isolates for all parameters
 
 
 ```{r Load necessary libraries}
@@ -21,7 +33,6 @@ library(car)
 ```
 
 ## Biological Replicate 1
-
 ```{r Read data and change factors for Biological Replicate 1}
 #read data
 BioRep1 <- read.csv("Splitplate/SplitPlateData/2024-09-16_SplitPlate_B52.csv", na.strings = "na")
@@ -37,7 +48,7 @@ BioRep1$Yeast=as.factor(BioRep1$Yeast)
 BioRep1$DAI=as.factor(BioRep1$DAI)
 ```
 
-
+### Impact of Yeast on Colony Size
 ```{r Plot all data for colony size for Biological Replicate 1}
 #plot data
 plot1 <- BioRep1 %>%
@@ -55,6 +66,7 @@ plot1
 
 ```
 
+
 ```{r Analysis on increase in colony size and Plot for Biological replicate 1}
 #filter 1st data date and removing the 1st data since there was no growth associated with it. The data is considered to be the baseline for growth so since it violates the assumption of normality, we remove it from the analysis
 
@@ -63,9 +75,10 @@ filterdata1 <-BioRep1[BioRep1$Media == "YePDA"& BioRep1$DAI != 2,]
 library(nlme)
 
 #stats used for size
-size1=lme(increase~Yeast*DAI,data = filterdata1,random=~1|Replication) ##replication random effect added by Dr. Steury
+size1=lme(increase~Yeast*DAI, data = filterdata1,random=~1|Replication) #mixed effect model
+size2=lm(increase ~ Yeast*DAI, data = filterdata1) #use simpler model
 summary(size1)
-anova(size1)
+anova(size1, size2) #to check if complex or simple model is better
 
 #pairwise comparison
 lsmeans.size1 <- emmeans(size1, ~ Yeast|DAI) 
@@ -104,20 +117,22 @@ colonysize1 <- filterdata1 %>%
   theme(axis.title.x = element_text(size =25, face = "bold"), axis.title.y = element_text(size = 25, face = "bold"), axis.text.x=element_text(size=20, angle= 0), axis.text.y=element_text(size=20, angle= 0))+
   theme_classic() +
   theme(legend.position = "none")+
-  ggtitle(expression(paste("Impact of Yeast on Growth of ", italic("Methylobacterium platani"), " EMM_B52"))) +
-   theme(plot.title = element_text(face = "bold", color = "Blue2", size = 16, hjust = 0.5))+
+  ggtitle(expression(paste("Impact of Yeast on Growth of ", italic("Methylobacterium platani"), " EMM_B52 (Biological Replicate 1)"))) +
+   theme(plot.title = element_text(face = "bold", color = "Blue2", size = 12, hjust = 0.5))+
   facet_wrap(~DAI)
 colonysize1
 ```
 
+### Impact of Yeast on Colony Weight
 
 ```{r Analysis on increase in colony weight and Plot for Biological Replicate 1}
-#filter data to avoid other data except e
+#filter data to avoid other data except of last day since it was detructive sample taking procedure and colony was taken out from the plate to measure the weight on the last day of data collection.
+
 filterdata1_2 <- filterdata1 %>% 
   filter(DAI == "8" )
 
 #stats used for colony weight
-cw1=lm(colony_weight~Yeast,data = filterdata1_2) ##replication random effect added by Dr. Steury
+cw1=lme(colony_weight~Yeast,data = filterdata1_2, random = ~1|Replication) ##replication random effect added by Dr. Steury
 summary(cw1)
 Anova(cw1)
 #pairwise comparision
@@ -154,14 +169,16 @@ weightplot <- filterdata1_2 %>%
   theme_classic() +
   theme(legend.position = "none")
   #ggtitle(expression(paste("Impact of Yeast on Growth of ", italic("Methylobacterium platani"), " EMM_B52"))) +
-   #theme(plot.title = element_text(face = "bold", color = "Blue2", size = 16, hjust = 0.5))
+   #theme(plot.title = element_text(face = "bold", color = "Blue2", size = 12, hjust = 0.5))
 colonyweightplot
 ```
 
 
+### Impact of Yeast on Colony Forming Unit (CFU) 
+
 ```{r Analysis on Colony Forming Unit(CFU) and Plot for Biological Replicate 1}
 #stats used for colony forming unit
-cfu1=lm(log10(CFU)~Yeast,data = filterdata1_2) 
+cfu1=lme(log10(CFU)~Yeast,data = filterdata1_2, random = ~1|Replication, na.action = na.omit) 
 summary(cfu1)
 Anova(cfu1)
 #pairwise comparision
@@ -210,11 +227,12 @@ CFU1PLOT
 #combining similar dataset plots into one
 cw1andcfu1 <- ggarrange(colonyweightplot, CFU1PLOT, nrow = 1, ncol = 2, common.legend = F)
   
-cw1andcfu1 <- annotate_figure(cw1andcfu1, top = text_grob(expression(paste("Impact of Yeast on Growth of ", italic("Methylobacterium platani"), " EMM_B52")), color = "Blue2", size = 16, face = "bold", hjust = 0.5))
+cw1andcfu1 <- annotate_figure(cw1andcfu1, top = text_grob(expression(paste("Impact of Yeast on Growth of ", italic("Methylobacterium platani"), " EMM_B52 (Biological  Replicate 1)")), color = "Blue2", size = 12, face = "bold", hjust = 0.5))
 cw1andcfu1
 ```
 
 ## Biological Replicate 2
+
 ```{r Load data and change factor for Biological Replicate 2}
 #read data
 BioRep2 <- read.csv("Splitplate/SplitPlateData/2024-11-11_SplitPlate_B52-1.csv", na.strings = "na")
@@ -229,6 +247,7 @@ BioRep2$Yeast=as.factor(BioRep2$Yeast)
 BioRep2$DAI=as.factor(BioRep2$DAI)
 ```
 
+### Impact of Yeast on Colony Size 
 
 ```{r Plot all data for colony size for Biological Replicate 2}
 #making ggplot
@@ -240,7 +259,7 @@ plot2 <- BioRep2 %>%
   xlab("Days after Inoculation") +   
   theme_classic() +
   scale_color_manual(values = cbbPalette) +
-  ggtitle("Biological Replicate 2") +
+  ggtitle("Second Biological Replicate") +
   theme(plot.title = element_text(hjust = 0.5))
 plot2
 
@@ -296,12 +315,13 @@ colonysize2 <- filterdata2 %>%
   theme(axis.title.x = element_text(size =25, face = "bold"), axis.title.y = element_text(size = 25, face = "bold"), axis.text.x=element_text(size=20, angle= 0), axis.text.y=element_text(size=20, angle= 0))+
   theme_classic() +
   theme(legend.position = "none")+
-  ggtitle(expression(paste("Impact of Yeast on Growth of ", italic("Methylobacterium platani"), " EMM_B52"))) +
-   theme(plot.title = element_text(face = "bold", color = "Blue2", size = 16, hjust = 0.5))+
+  ggtitle(expression(paste("Impact of Yeast on Growth of ", italic("Methylobacterium platani"), " EMM_B52 (Biological Replicate 2)"))) +
+   theme(plot.title = element_text(face = "bold", color = "Blue2", size = 12, hjust = 0.5))+
   facet_wrap(~DAI)
 colonysize2
 ```
 
+### Impact of Yeast on Colony Weight
 
 ```{r Analysis on increase in colony weight and Plot for Biological Replicate 2}
 #filter data to avoid other data except 
@@ -309,7 +329,7 @@ filterdata2_2 <- BioRep2 %>%
   filter(DAI == "10" )
 
 #stats used for colony weight
-cw2=lm(colony_weight~Yeast,data = filterdata2_2) 
+cw2=lme(colony_weight~Yeast,data = filterdata2_2, random = ~1|Replication) 
 summary(cw2)
 Anova(cw2)
 #pairwise comparision
@@ -349,10 +369,11 @@ weightplot <- filterdata2_2 %>%
 colonyweightplot
 ```
 
+### Impact of Yeast on Colony Forming Unit (CFU)
 
 ```{r Analysis on Colony Forming Unit(CFU) and Plot for Biological Replicate 2}
 #stats used for colony forming unit
-cfu2=lm(log10(CFU)~Yeast,data = filterdata2_2) 
+cfu2=lme(log10(CFU)~Yeast,data = filterdata2_2, random = ~1|Replication, na.action = na.omit) 
 summary(cfu2)
 Anova(cfu2)
 #pairwise comparision
@@ -397,7 +418,7 @@ CFU2PLOT
 #combining similar dataset plots into one
 cw2andcfu2 <- ggarrange(colonyweightplot, CFU2PLOT, nrow = 1, ncol = 2, common.legend = F)
   
-cw2andcfu2 <- annotate_figure(cw2andcfu2, top = text_grob(expression(paste("Impact of Yeast on Growth of ", italic("Methylobacterium platani"), " EMM_B52")), color = "Blue2", size = 16, face = "bold", hjust = 0.5))
+cw2andcfu2 <- annotate_figure(cw2andcfu2, top = text_grob(expression(paste("Impact of Yeast on Growth of ", italic("Methylobacterium platani"), " EMM_B52 (Biological Replicate 2)")), color = "Blue2", size = 12, face = "bold", hjust = 0.5))
 cw2andcfu2
 ```
 

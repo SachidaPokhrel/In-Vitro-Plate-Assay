@@ -1,15 +1,23 @@
 ---
-title: "Peace Assay"
+title: "Co-Culture Assay"
 author: "Sachida Pokhrel"
 date: "2025-04-18"
 output: 
+  md_document:
+    variant: gfm
   html_document:
     toc: TRUE
     toc_float: TRUE
-  md_document:
-    variant: gfm
 ---
+## Things to know before Analysis
 
+***This is applied for all the dataset for Co-culture Assay***
+
+- One .csv file is loaded for one bacteria interacting with multiple yeast isolates
+- There are three R chunks for each bacterial data. 
+- There are 16 different yeast interacting with one bacteria. So, to make it more clear in the plot and to make it less cumbersome, these yeast isolates are further categorised into 4 Yeast classes. 
+- There are 8 colonies of yeast and 8 colonies of bacteria at different distances in one plate. Data is taken only for bacterial colony size which reflects the impact of yeast on bacteria.
+- Plots have multiple line graphs, thus the significant letters are not assigned through code and will be added later after exporting the plot.
 
 ```{r Load necessary libraries}
 #load necessary library
@@ -29,11 +37,11 @@ library(nlme)
 ```
 
 ## ***Curtobacterium flaccumfaciens* EMM_B44**
-Combined plot for all yeast effecting bacterial growth. 16 different isolates of yeast are grouped under 4 different classes of yeast.
+Plot is generated using loop around the 4 different classes of yeast, coming up with 4 plots as an output which will be combined in one plot.
 
 ```{r Plot for EMM_B44}
 #read data
-B44 <- read.csv("PeaceAssay/PeaceAssayData/2024-08-09_PeaceAssay_B44.csv", na.strings = "na") 
+B44 <- read.csv("CoCultureAssay/CoCultureAssayData/2024-08-09_PeaceAssay_B44.csv", na.strings = "na") 
 
 
 #load cbb color palette
@@ -72,12 +80,12 @@ for (i in seq_along(unique_class)) {
   
   # Generate the plot
   p <- ggplot(data, aes(x = distance_to_yeast, y = increase, group = Yeast, color = Yeast)) +
-    stat_summary(fun = mean, geom = "line") +   
-    stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.5) +   
+    stat_summary(fun = mean, geom = "line") +   #making a line graph
+    stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.5) +   #standard error in plot
     ylab("Increase in colony diameter (mm)") +   
     xlab("Distance to Yeast (mm)") +   
     theme_classic() +
-    scale_color_manual(values = cbbPalette) +
+    scale_color_manual(values = cbbPalette) + #providing color blind palette
     ggtitle(unique_class[i]) +
     theme(plot.title = element_text(hjust = 0.5))
   
@@ -86,7 +94,7 @@ for (i in seq_along(unique_class)) {
 }
 
 #combining each iteration into one plot for one bacteria or dataset
-combined_plotB44 <- ggarrange(plotlist = plot_listB44, ncol = 2, nrow = 2, common.legend = FALSE)
+combined_plotB44 <- ggarrange(plotlist = plot_listB44, ncol = 2, nrow = 2, common.legend = FALSE) #using the list generated from the loop, use it to make a combined plot without common legend.
 # Annotation for the title
 final_plotB44 <- annotate_figure(combined_plotB44,
                                  top = text_grob(
@@ -98,15 +106,17 @@ print(final_plotB44)
 ```
 
 ### Stats for *Curtobacterium flaccumfaciens* EMM_B44
+We are using linear mixed model. Our dependent variable or y is increase (increase in colony diameter from 1st data) and independent variables are different Yeast isolates, days after inoculation (DAI), and distance to yeast which is the distance between the yeast and bacterial colony in the plate. Each plate is replicated 3 times. 
+
+***This applies for all the dataset for Co-Culture Plate Assay***
+
 ```{r Stats for EMM_B44}
-#filter data to remove 1st day data since the first data is taken as a base to measure the increase in colony size to rule out the variability that is caused by the drop inoculation. So, initially the increase in the colony diameter for 1st data is "0" that violates the assumption of normality, thus we remove that from analysis. This would be similar for all the bacterial isolates.
+#filter data to remove 1st day data since the first data is taken as a base to measure the increase in colony size to rule out the variability that is caused by the drop inoculation. So, initially the increase in the colony diameter for 1st data for all colony is "0" that violates the assumption of normality, thus we remove that from analysis. This would be similar for all the bacterial isolates.
 
 B44.no.1st.data <- B44.no.contact[B44.no.contact$DAI != "2",]
 #We check interaction for all before cutting it down to the significant one.
 B44try=lme(increase~DAI*distance_to_yeast*Yeast, data = B44.no.1st.data, random = ~1|Replication, na.action = na.omit)
 anova(B44try)
-
-
 
 #removed interaction terms that were not significant.
 resultsB44=lme(increase~DAI+distance_to_yeast*Yeast, data = B44.no.1st.data, random = ~1|Replication, na.action = na.omit)
@@ -116,8 +126,7 @@ anova(resultsB44) #for overall x variables
 ```
 
 ### Loop for running analysis for each day separately for EMM_B44
-
-Days after inoculation (DAI) as a factor is always significantly impacting the growth. However, sometimes DAI is significant under interaction with other factor like Yeast and distance to the yeast as a factor. Also, our plot will represent data for Day 6 thus we want comparison for other variables at Day 6 to present it into the plot later on.
+Days after inoculation (DAI) as a factor is always significantly impacting the growth. Also, our plot will represent data for Day 6 thus we want relevant stats and comparison on Day 6 to present in the plot. So, loop was made for each Day data and removing DAI from the model and keeping rest of it present. 
 ```{r loop of stat for each day for EMM_B44}
 # Extract all the unique days to be used for iteration in for loop
 day <- unique(B44.no.1st.data$DAI)
@@ -130,17 +139,18 @@ anova_table_B44 <- list()
 Results_lsmeansB44 <- list()
 filtered_comparisonsB44 <- list()
 
-for (i in seq_along(day)) {
-    # Filter data for the current day
+for (i in seq_along(day)) { #there are DAI 4, 6 and 8 that was extracted as unique days; sequence assigned will be 1 , 2 and 3 for each unique DAI
+  
+   # Filter data for the current day
   B44_Day[[i]] <- filter(B44.no.1st.data, DAI == day[i])
     # Fit the mixed effects model
   resultsB44_Day[[i]] <- lme(increase ~ distance_to_yeast * Yeast,
                             data = B44_Day[[i]],
                             random = ~1 | Replication,
-                            na.action = na.omit)
-  cat("\n\n=== Day:", day[i], "===\n")
-    model_summary_B44[[i]] <- summary(resultsB44_Day[[i]])
-  anova_table_B44[[i]] <- anova(resultsB44_Day[[i]])
+                            na.action = na.omit) #Using mixed effect model here subsetting the data for the particular day
+
+    model_summary_B44[[i]] <- summary(resultsB44_Day[[i]]) #store in the list value
+  anova_table_B44[[i]] <- anova(resultsB44_Day[[i]]) #store in list value
    # Estimated marginal means
   meansB44_Day[[i]] <- emmeans(resultsB44_Day[[i]], ~ Yeast | distance_to_yeast)
     # Compact letter display with Tukey adjustment
@@ -164,7 +174,7 @@ for (i in seq_along(day)) {
 
 ```{r Plot for EMM_B30}
 #read data
-B30 <- read.csv("PeaceAssay/PeaceAssayData/2024-07-21_PeaceAssay_B30.csv", na.strings = "na") 
+B30 <- read.csv("CoCultureAssay/CoCultureAssayData/2024-07-21_PeaceAssay_B30.csv", na.strings = "na") 
 
 
 #load cbb color palette
@@ -225,6 +235,8 @@ final_plotB30 <- annotate_figure(combined_plotB30,
 print(final_plotB30)
 ```
 
+***After first bacteria everything is repeated in similar way for all dataset***
+
 ### Stats for *Curtobacterium flaccumfaciens* EMM_B30
 ```{r Stats for EMM_B30}
 B30.no.1st.data <- B30.no.contact[B30.no.contact$DAI != "2",]
@@ -281,7 +293,7 @@ for (i in seq_along(day)) {
 
 ```{r Plot for EMM_B5}
 #read data
-B5 <- read.csv("PeaceAssay/PeaceAssayData/2024-08-09_PeaceAssay_B5.csv", na.strings = "na") 
+B5 <- read.csv("CoCultureAssay/CoCultureAssayData/2024-08-09_PeaceAssay_B5.csv", na.strings = "na") 
 
 
 #load cbb color palette
@@ -351,7 +363,6 @@ anova(B5try)
 
 resultsB5=lme(increase~distance_to_yeast*Yeast+Yeast*DAI, data = B5.no.1st.data, random = ~1|Replication, na.action = na.omit)
 summary(resultsB5)
-anova(resultsB5)
 ```
 
 ### Loop for running analysis for each day separately EMM_B5
@@ -400,7 +411,7 @@ for (i in seq_along(day)) {
 
 ```{r Plot for AL65}
 #read data
-AL65 <- read.csv("PeaceAssay/PeaceAssayData/2024-08-09_PeaceAssay_AL65.csv", na.strings = "na") 
+AL65 <- read.csv("CoCultureAssay/CoCultureAssayData/2024-08-09_PeaceAssay_AL65.csv", na.strings = "na") 
 #load cbb color palette
 cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 str(AL65)
@@ -521,7 +532,7 @@ for (i in seq_along(day)) {
 
 ```{r Plot for EMM_B17}
 #read data
-B17 <- read.csv("PeaceAssay/PeaceAssayData/2024-07-17_PeaceAssay_B17.csv", na.strings = "na") 
+B17 <- read.csv("CoCultureAssay/CoCultureAssayData/2024-07-17_PeaceAssay_B17.csv", na.strings = "na") 
 
 
 #load cbb color palette
@@ -639,7 +650,7 @@ for (i in seq_along(day)) {
 
 ```{r Plot for EMM_B52}
 #read data
-B52 <- read.csv("PeaceAssay/PeaceAssayData/MergedB52.csv", na.strings = "na") 
+B52 <- read.csv("CoCultureAssay/CoCultureAssayData/MergedB52.csv", na.strings = "na") 
 #load cbb color palette
 cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 str(B52)
@@ -753,6 +764,5 @@ for (i in seq_along(day)) {
 
 ```
  
- All significant letters will be assigned after the data is exported into pdf format for specific annotation on the plot.
 
 
