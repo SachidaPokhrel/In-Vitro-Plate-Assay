@@ -64,8 +64,9 @@ All data analyses, including appropriate statistical methods and publication-qua
 
 ## **🔁 Reproducibility**
 Use following links for reproducibility check!
-[Co-Culture Assay](CoCultureAssay/Co-Culture.Rmd)
-[In-Vitro Split Plate Assay](SplitPlate/Splitplate.Rmd)
+
+- [Co-Culture Assay](CoCultureAssay/Co-Culture.Rmd)
+- [In-Vitro Split Plate Assay](SplitPlate/Splitplate.Rmd)
 
 ## **📝 File Tree and Organization**
 
