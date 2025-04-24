@@ -62,7 +62,6 @@ All data analyses, including appropriate statistical methods and publication-qua
   - [multcomp(version 1.4-28)](https://cran.r-project.org/web/packages/multcomp/index.html) for pairwise comparison 
   - [multcompView(version 0.1-10)](https://cran.r-project.org/web/packages/multcompView/index.html) generate significant letters
 
-fs::dir_tree()
 
 ## **📝 File Tree and Organization**
 
