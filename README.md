@@ -136,4 +136,4 @@ All data analyses, including appropriate statistical methods and publication-qua
 
 [![DOI](https://zenodo.org/badge/923872561.svg)](https://doi.org/10.5281/zenodo.15258662)
 
-For further inquiries or additional information, please feel free to contact me via [email📧](szp0204@auburn.edu). 
+For further inquiries or additional information, please feel free to contact via [email📧](szp0204@auburn.edu). 
