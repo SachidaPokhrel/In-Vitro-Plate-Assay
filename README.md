@@ -1,7 +1,7 @@
 # 🧫 In-Vitro-Plate-Assay
 The interaction between 16 different yeast isolates belonging to various classes of basidiomycetes yeasts and six different bacterial isolates, isolated from various hosts, was studied using a specialized in-vitro plate assay. This assay was designed to identify different types of interactions, including contact-dependent, distance-dependent (via agar-diffusible compounds), and distance-independent (via volatile compounds) interactions. To assess that following type of assays were conducted.  
 
-## [Co-Culture Plate Assay](CoCultureAssay/CoCultureAssay.Rmd)
+## [Co-Culture Plate Assay](CoCultureAssay/Co-CultureAssay.Rmd)
 Each plate contained eight 3 μl drops of yeast and bacteria arranged in diagonal rows positioned at increasing distances inside a 100 mm petri dish containing YePD agar medium, forming the shape of a “V”. At the apex, the microbe drops were placed in direct contact to determine any contact-dependent interactions. At the same time, the distance between colonies increased as the drops diverged to determine contact-independent interactions, such as diffusible compounds or volatile interactions. 
 
 I have different dataset for each bacteria. Each dataset is in the following data structure.
@@ -62,29 +62,75 @@ All data analyses, including appropriate statistical methods and publication-qua
   - [multcomp(version 1.4-28)](https://cran.r-project.org/web/packages/multcomp/index.html) for pairwise comparison 
   - [multcompView(version 0.1-10)](https://cran.r-project.org/web/packages/multcompView/index.html) generate significant letters
 
+fs::dir_tree()
 
 ## **📝 File Tree and Organization**
 
 ```
 .
-├── In-Vitro-Plate-Assay.Rproj
-├── LICENSE
-├── CoCultureAssay
-│   ├── CoCultureAssay.Rmd
-│   └── CoCultureAssayData
-│       ├── 2024-07-07_PeaceAssay_B52.csv
-│       ├── 2024-07-17_PeaceAssay_B17.csv
-│       ├── 2024-07-21_PeaceAssay_B30.csv
-│       ├── 2024-08-09_PeaceAssay_AL65.csv
-│       ├── 2024-08-09_PeaceAssay_B44.csv
-│       ├── 2024-08-09_PeaceAssay_B5.csv
-│       └── MergedB52.csv
-├── README.md
-└── SplitPlate
-    ├── Splitplate.Rmd
-    └── SplitPlateData
-        ├── 2024-09-16_SplitPlate_B52.csv
-        └── 2024-11-11_SplitPlate_B52-1.csv
+├── CoCultureAssay                                  #Folder for Co-Culture Plate Assay
+│   ├── AL65                                        #Sub-folder for bacteria AL65
+│   │   ├── AL65.md                                 #Github-flavored markdown for analysis on Co-culture assay of AL65
+│   │   ├── AL65.Rmd                                #Markdown for the analysis on Co-culture assay of AL65
+│   │   └── AL65_files                              #All image and output for the run
+│   │       └── figure-gfm
+│   │           └── Plot for AL65-1.png
+│   ├── EMM_B17
+│   │   ├── EMM_B17.md
+│   │   ├── EMM_B17.Rmd
+│   │   └── EMM_B17_files
+│   │       └── figure-gfm
+│   │           └── Plot for EMM_B17-1.png
+│   ├── EMM_B30
+│   │   ├── EMM_B30.md
+│   │   ├── EMM_B30.Rmd
+│   │   └── EMM_B30_files
+│   │       └── figure-gfm
+│   │           └── Plot for EMM_B30-1.png
+│   ├── EMM_B44
+│   │   ├── EMM_B44.md
+│   │   ├── EMM_B44.Rmd
+│   │   └── EMM_B44_files
+│   │       └── figure-gfm
+│   │           └── Plot for EMM_B44-1.png
+│   ├── EMM_B5
+│   │   ├── EMM_B5.md
+│   │   ├── EMM_B5.Rmd
+│   │   └── EMM_B5_files
+│   │       └── figure-gfm
+│   │           └── Plot for EMM_B5-1.png
+│   ├── EMM_B52
+│   │   ├── EMM_B52.md
+│   │   ├── EMM_B52.Rmd
+│   │   ├── EMM_B52_files
+│   │       └── figure-gfm
+│   │       └── Plot for EMM_B52-1.png 
+│   └── CoCultureAssayData                          #Data for All Co-Culture Assay          
+│       ├── 2024-07-17_PeaceAssay_B17.csv           #Data for Yeast interaction with EMM_B17
+│       ├── 2024-07-21_PeaceAssay_B30.csv           #Data for Yeast interaction with EMM_B30
+│       ├── 2024-08-09_PeaceAssay_AL65.csv          #Data for Yeast interaction with AL65
+│       ├── 2024-08-09_PeaceAssay_B44.csv           #Data for Yeast interaction with EMM_B44
+│       ├── 2024-08-09_PeaceAssay_B5.csv            #Data for Yeast interaction with EMM_B5
+│       └── MergedB52.csv                           #Data for Yeast interaction with EMM_B52
+├── In-Vitro-Plate-Assay.Rproj                      #Rproject
+├── LICENSE                                         #License
+├── README.md                                       #Readme file
+└── SplitPlate                                      #Folder for In-Vitro SplitPlate
+    ├── Splitplate.md                               #Github flavored markdown for analysis of In-vitro Split Plate Assay
+    ├── Splitplate.Rmd                              #Markdown for analysis of In-Vitro SplitPlate Assay
+    ├── SplitPlateData                              #All data for Split Plate
+    │   ├── 2024-09-16_SplitPlate_B52.csv           #First Biological Replicate data for Split Plate
+    │   └── 2024-11-11_SplitPlate_B52-1.csv         #Second Biological Replicate data for Split Plate
+    └── Splitplate_files                            #Splitplate output images
+        └── figure-gfm
+            ├── CFU and colony weight Combined Plot for Biological Replicate 1-1.png
+            ├── CFU and Colony weight Combined Plot for Biological Replicate 2-1.png
+            ├── Colony Forming Unit(CFU) Plot for Biological Replicate 1-1.png
+            ├── Colony Forming Unit(CFU) Plot for Biological Replicate 2-1.png
+            ├── Colony Weight Plot for Biological Replicate 1-1.png
+            ├── Colony weight plot for Biological Replicate 2-1.png
+            ├── Increase in colony size Plot for Biological replicate 1-1.png
+            └── Increase in colony size Plot for Biological Replicate 2-1.png
 ```
 
 ## **📎 Citation**
