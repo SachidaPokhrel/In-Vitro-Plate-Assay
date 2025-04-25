@@ -20,7 +20,7 @@ I have different dataset for each bacteria. Each dataset is in the following dat
 Each replicate has 8 bacterial colonies measured present at different distances from 8 colonies of yeast.
 
 
-## [In-vitro Split Plate Assay](SplitPlate/Splitplate.Rmd)
+## [In-vitro Split Plate Assay](Splitplate/Splitplate.Rmd)
 This was done for the confirmation of the volatile interactions. Since the previous co-culture experiment could not rule out the role of volatiles versus agar diffusible compounds, we repeated selected interactions inside 100 mm Petri dishes with a bifurcation, which physically separated the yeast from the bacterium, thus only allowing interactions via volatile metabolites. Two colonies were inoculated in one compartment and other compartment is mass streaked with the yeast isolate or left uninoculated (in case of Control). Since the *Methylobacterium platanii* EMM_B52 had a prominent impact due to yeast volatiles we moved forward with *Methylobacterium platanii* EMM_B52 that faced most prominent impact in the presence of yeast.
 
 Two biological replicate was conducted for this experiment and each replicate has different dataset. Each dataset is in the following data structure. 
@@ -65,8 +65,8 @@ All data analyses, including appropriate statistical methods and publication-qua
 ## **🔁 Reproducibility**
 Use following links for reproducibility check!
 
-- [Co-Culture Assay](CoCultureAssay/Co-Culture.Rmd)
-- [In-Vitro Split Plate Assay](SplitPlate/Splitplate.Rmd)
+- [Co-Culture Assay](CoCultureAssay/Co-CultureAssay.Rmd)
+- [In-Vitro Split Plate Assay](Splitplate/Splitplate.Rmd)
 
 ## **📝 File Tree and Organization**
 
