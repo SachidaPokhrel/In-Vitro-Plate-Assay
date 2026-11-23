@@ -34,6 +34,903 @@ library(car)
 library(nlme)
 ```
 
+```{r}
+B44 <- read.csv("CoCultureAssay/CoCultureAssayData/2024-08-09_PeaceAssay_B44.csv", na.strings = "na") 
+B30 <- read.csv("CoCultureAssay/CoCultureAssayData/2024-07-21_PeaceAssay_B30.csv", na.strings = "na") 
+B5 <- read.csv("CoCultureAssay/CoCultureAssayData/2024-08-09_PeaceAssay_B5.csv", na.strings = "na") 
+AL65 <- read.csv("CoCultureAssay/CoCultureAssayData/2024-08-09_PeaceAssay_AL65.csv", na.strings = "na") 
+B17 <- read.csv("CoCultureAssay/CoCultureAssayData/2024-07-17_PeaceAssay_B17.csv", na.strings = "na") 
+B52 <- read.csv("CoCultureAssay/CoCultureAssayData/MergedB52.csv", na.strings = "na") 
+
+str(B52)
+
+PeaceAssay.all <- bind_rows(
+  B44,
+  B30,
+  B5,
+  AL65,
+  B17,
+  B52
+) 
+
+# Filter to Magnolia host
+PeaceAssay.all <- PeaceAssay.all %>%
+  filter(Host %in%  c("Magnolia", "Control"))
+
+# Round distance
+PeaceAssay.all$distance_to_yeast <- round(
+  PeaceAssay.all$distance_to_yeast,
+  0
+)
+
+# Convert variables to factors
+PeaceAssay.all$Replication <- as.factor(PeaceAssay.all$Replication)
+PeaceAssay.all$Yeast <- as.factor(PeaceAssay.all$Yeast)
+PeaceAssay.all$DAI <- as.factor(PeaceAssay.all$DAI)
+PeaceAssay.all$Bacteria <- as.factor(PeaceAssay.all$Bacteria)
+
+# Remove direct-contact observations (distance = 0)
+PeaceAssay.no.contact <- PeaceAssay.all %>%
+  filter(distance_to_yeast != 0)
+
+# Remove first observation date (2 DAI)
+PeaceAssay.no.1st.data <- PeaceAssay.no.contact %>%
+  filter(DAI != 2)
+
+PeaceAssay.no.1st.data <- droplevels(PeaceAssay.no.1st.data)
+
+# We are changing the increase variable to assume that minor fluctuations in growth were due to measurment error not shrinkage. 
+PeaceAssay.no.1st.data$increase2 <- ifelse(PeaceAssay.no.1st.data$increase < 0, 0, PeaceAssay.no.1st.data$increase)
+
+# Undestaning the rank deficiency, which is ok 
+xtabs(~ Bacteria + Yeast + DAI, data = PeaceAssay.no.1st.data)
+```
+
+Full model 
+```{r}
+# Fit a linear mixed-effects model testing the effects of
+# distance from the yeast colony, yeast isolate, bacterial isolate,
+# days after inoculation (DAI), and all interactions on colony growth.
+# Replication is included as a random intercept.
+
+lm.peace.assay <- lme4::lmer(
+  increase2 ~ distance_to_yeast * Yeast * Bacteria * as.factor(DAI)+
+    (1|Replication:distance_to_yeast:Yeast:Bacteria),
+  data = PeaceAssay.no.1st.data
+)
+
+# Type II Wald chi-square analysis of deviance for fixed effects
+car::Anova(lm.peace.assay)
+
+### YEAST x Bacteria interaction ###
+# Calculate estimated marginal means for yeast treatments
+# within each bacterial isolate, averaged across distances and DAI.
+emm.al65 <- emmeans(
+  lm.peace.assay,
+  ~ Yeast,
+  at = list(Bacteria = "AL65", DAI = c(4,6))
+)
+
+emm.other <- emmeans(
+  lm.peace.assay,
+  ~ Yeast | Bacteria,
+  at = list(DAI = c(4,6,8))
+)
+
+# Compare each yeast treatment against the control using
+# Dunnett-adjusted multiple comparisons.
+contrast_dist_al65 <- contrast(
+  emm.al65,
+  method = "trt.vs.ctrl",
+  ref = "Control",
+  reverse = TRUE,
+  adjust = "dunnett"
+)
+
+contrast_dist_al65
+
+contrast_dist_other <- contrast(
+  emm.other,
+  method = "trt.vs.ctrl",
+  ref = "Control",
+  reverse = TRUE,
+  adjust = "dunnett"
+)
+
+contrast_dist_other
+
+# Convert to data frames
+contrast_dist_al65.df <- as.data.frame(contrast_dist_al65)
+contrast_dist_other.df <- as.data.frame(contrast_dist_other)
+
+# Remove the AL65 rows from the full table
+contrast_dist_other.df <- contrast_dist_other.df %>%
+  filter(Bacteria != "AL65")
+
+# Combine
+contrast_dist.final <- as.data.frame(bind_rows(
+  contrast_dist_other.df,
+  contrast_dist_al65.df
+))
+
+contrast_dist.final$Bacteria[
+  is.na(contrast_dist.final$Bacteria)
+] <- "AL65"
+
+
+# Calculate observed mean colony growth for each
+# yeast × bacteria combination.
+summary.df <-
+  PeaceAssay.no.1st.data %>%
+  group_by(Bacteria, Yeast) %>%
+  summarise(
+    MeanIncrease = mean(increase2, na.rm = TRUE),
+  )
+
+
+# Extract mean growth for the control treatment
+# within each bacterial isolate.
+control.df <-
+  summary.df %>%
+  filter(Yeast == "Control") %>%
+  dplyr::select(
+    Bacteria,
+    ControlMean = MeanIncrease
+  )
+
+
+# Calculate the observed difference in colony growth
+# between each yeast treatment and the corresponding control.
+plot.df <-
+  summary.df %>%
+  left_join(control.df, by = "Bacteria") %>%
+  mutate(
+    DiffFromControl = MeanIncrease - ControlMean
+  ) %>%
+  filter(Yeast != "Control")
+
+
+# Convert model contrast results to a plotting dataframe.
+# Sig identifies yeast treatments significantly different
+# from the control after Dunnett correction.
+sig.df <- as.data.frame(contrast_dist.final) %>%
+  mutate(
+    Effect = -estimate,
+    Yeast = str_remove(contrast, "Control - "),
+    Sig = p.value < 0.05
+  )
+
+
+# Merge observed differences from control with
+# significance results from the mixed model.
+plot.df2 <- plot.df %>%
+  left_join(
+    sig.df %>%
+      dplyr::select(
+        Bacteria,
+        Yeast,
+        p.value,
+        Sig
+      ),
+    by = c("Bacteria", "Yeast")
+  )
+
+
+# Replace bacterial isolate codes with species names
+# for publication-quality facet labels.
+plot.df2$Bacteria <- dplyr::recode(
+  plot.df2$Bacteria,
+  "AL65" = "X. perforans AL65",
+  "B17"  = "H. polaris EMM_B17",
+  "B30"  = "C. flaccumfaciens EMM_B30",
+  "B44"  = "C. flaccumfaciens EMM_B44",
+  "B5"   = "P. massiliensis EMM_B5",
+  "B52"  = "M. platani EMM_B52"
+)
+
+
+# Publication labels for yeast isolates.
+yeast_labels <- c(
+  "SP_F14"  = expression(italic("A. pullulans") ~ "SP_F14"),
+  "EMM_F3"  = expression("Dothioreaceae sp. EMM_F3"),
+  "EMM_F49" = expression(italic("S. koalae") ~ "EMM_F49"),
+  "EMM_F5"  = expression("Microsporomycetaceae sp. EMM_F5"),
+  "EMM_F7"  = expression(italic("H. sinensis") ~ "EMM_F7")
+)
+
+
+# Lollipop plot showing observed mean differences from the control.
+# Positive values indicate greater colony growth than the control,
+# whereas negative values indicate growth suppression.
+# Colored points indicate significant differences from the control
+# according to Dunnett-adjusted model contrasts.
+ggplot(
+  plot.df2,
+  aes(
+    x = Yeast,
+    y = DiffFromControl,
+    color = Sig
+  )
+) +
+  geom_hline(
+    yintercept = 0,
+    linetype = 2,
+    color = "grey50"
+  ) +
+  geom_segment(
+    aes(
+      xend = Yeast,
+      y = 0,
+      yend = DiffFromControl
+    ),
+    linewidth = 0.8
+  ) +
+  geom_point(size = 4) +
+  facet_wrap(
+    ~Bacteria,
+    ncol = 1,
+    scales = "free_y"
+  ) +
+  scale_x_discrete(
+    labels = yeast_labels
+  ) +
+  scale_color_manual(
+    values = c(
+      "FALSE" = "grey70",
+      "TRUE"  = "#D55E00"
+    )
+  ) +
+  theme_bw() +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    ),
+    legend.position = "none"
+  ) +
+  labs(
+    y = "Difference in colony growth \n relative to control",
+    x = ""
+  ) +
+  coord_flip()
+
+#### Distance effect on Yeast x Bacteria combination ####
+# Estimate the slope of the distance effect for every
+# yeast × bacteria combination and if the slope is different than the control. 
+distance.slopes <- emtrends(
+  lm.peace.assay,
+  ~ Yeast,
+  var = "distance_to_yeast",
+  at = list(
+    Bacteria = c("B17","B30","B44","B5","B52")
+  )
+)
+summary(distance.slopes, infer = TRUE)
+pairs(distance.slopes, adjust = "tukey")
+
+summary.plot <- PeaceAssay.no.1st.data %>%
+  group_by(Yeast, distance_to_yeast) %>%
+  summarise(
+    Mean = mean(increase2, na.rm = TRUE),
+    SE = sd(increase2, na.rm = TRUE) / sqrt(n()),
+    .groups = "drop"
+  ) %>%
+  filter(Yeast %in% c("EMM_F7", "EMM_F49", "SP_F14", "Control"))
+
+# Data containing means to plot
+# summary.plot:
+# Yeast, distance_to_yeast, Mean, SE
+
+# Control line
+control.df <- summary.plot %>%
+  filter(Yeast == "Control")
+
+# Yeasts you want as panels
+yeast.df <- summary.plot %>%
+  filter(Yeast != "Control")
+
+# Duplicate control into every facet
+control.facets <- expand.grid(
+  PanelYeast = unique(yeast.df$Yeast),
+  distance_to_yeast = unique(control.df$distance_to_yeast)
+) %>%
+  left_join(
+    control.df %>%
+      dplyr::select(distance_to_yeast, Mean),
+    by = "distance_to_yeast"
+  ) %>%
+  mutate(Line = "Control")
+
+# Focal yeast data
+yeast.facets <- yeast.df %>%
+  mutate(
+    PanelYeast = Yeast,
+    Line = Yeast
+  )
+
+plot.df <- bind_rows(
+  yeast.facets %>%
+    dplyr::select(PanelYeast, distance_to_yeast, Mean, Line),
+  control.facets
+)
+
+ggplot(plot.df,
+       aes(distance_to_yeast, Mean,
+           color = Line,
+           group = Line)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 3) +
+  facet_wrap(~PanelYeast) +
+  scale_color_manual(
+    values = c(
+      "Control" = "black",
+      "EMM_F49" = "#D98C00",
+      "EMM_F7"  = "#4C9BDC",
+      "SP_F14"  = "#1B9E77"
+    )
+  ) +
+  labs(
+    x = "Distance from yeast (mm)",
+    y = "Mean colony diameter (mm)"
+  ) +
+  theme_bw()
+
+ggplot(
+  summary.plot,
+  aes(
+    x = distance_to_yeast,
+    y = Mean,
+    color = Yeast
+  )
+) +
+  geom_hline(
+    yintercept = 0,
+    linetype = 2,
+    color = "grey50"
+  ) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 3) +
+  theme_bw() +
+  labs(
+    x = "Distance from yeast (mm)",
+    y = "Difference in colony \n diameter (mm) from control"
+  ) + 
+  scale_color_manual(values = cbbPalette) 
+
+
+######### The DAI #########
+
+emm.dai <- emmeans(
+  lm.peace.assay,
+  ~ Yeast | Bacteria * DAI
+)
+
+contrast.dai <- contrast(
+  emm.dai,
+  method = "trt.vs.ctrl",
+  ref = "Control",
+  reverse = TRUE,
+  adjust = "dunnett"
+)
+
+contrast.dai
+
+sig.dai.df <- as.data.frame(contrast.dai) %>%
+  mutate(
+    Yeast = str_remove(contrast, "Control - "),
+    Sig = p.value < 0.05
+  ) %>%
+  dplyr::select(
+    Bacteria,
+    DAI,
+    Yeast,
+    p.value,
+    Sig
+  )
+
+summary.dai <- PeaceAssay.no.1st.data %>%
+  group_by(Bacteria, Yeast, DAI) %>%
+  summarise(
+    MeanIncrease = mean(increase2, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+control.dai <- summary.dai %>%
+  filter(Yeast == "Control") %>%
+  dplyr::select(
+    Bacteria,
+    DAI,
+    ControlMean = MeanIncrease
+  )
+
+heatmap.dai <- summary.dai %>%
+  left_join(
+    control.dai,
+    by = c("Bacteria", "DAI")
+  ) %>%
+  mutate(
+    DiffFromControl = MeanIncrease - ControlMean
+  ) %>%
+  filter(Yeast != "Control")
+
+heatmap.dai <- heatmap.dai %>%
+  left_join(
+    sig.dai.df,
+    by = c("Bacteria", "Yeast", "DAI")
+  )
+
+heatmap.dai$Bacteria <- dplyr::recode(
+  heatmap.dai$Bacteria,
+  "AL65" = "X. perforans AL65",
+  "B17"  = "H. polaris EMM_B17",
+  "B30"  = "C. flaccumfaciens EMM_B30",
+  "B44"  = "C. flaccumfaciens EMM_B44",
+  "B5"   = "P. massiliensis EMM_B5",
+  "B52"  = "M. platani EMM_B52"
+)
+
+heatmap.dai <- heatmap.dai %>%
+  mutate(
+    Yeast = factor(
+      Yeast,
+      levels = c("SP_F14","EMM_F7","EMM_F5","EMM_F49","EMM_F3"),
+      labels = c(
+        "A. pullulans SP_F14",
+        "H. sinensis EMM_F7",
+        "Microsporomycetaceae sp. EMM_F5",
+        "S. koalae EMM_F49",
+        "Dothioreaceae sp. EMM_F3"
+      )
+    )
+  )
+
+
+
+
+ggplot(
+  heatmap.dai,
+  aes(
+    x = factor(DAI),
+    y = Yeast,
+    fill = DiffFromControl
+  )
+) +
+  geom_tile(color = "white") +
+  geom_text(
+    aes(
+      label = ifelse(Sig, "*", "")
+    ),
+    size = 5,
+    vjust = 0.8
+  ) +
+  facet_wrap(~Bacteria, ncol = 2) +
+  scale_fill_gradient2(
+    low = cbbPalette[[7]],
+    mid = "white",
+    high = cbbPalette[[4]],
+    midpoint = 0
+  ) +
+  labs(
+  fill = "Difference from\ncontrol (mm)"
+) +
+  xlab("DAI") +
+  ylab("") +
+  theme_classic()
+
+
+
+
+
+
+library(dplyr)
+library(stringr)
+
+contr_df2 <- contr_df %>%
+  filter(!is.na(estimate)) %>%
+  mutate(
+    Yeast = str_remove(as.character(contrast), "Control - ")
+  )
+
+ggplot(as.data.frame(contr_df2),
+       aes(Yeast, Bacteria, fill = estimate)) +
+  geom_tile() +
+  geom_text(aes(label = sig),
+            size = 5) +
+  facet_wrap(~DAI) +
+  scale_fill_gradient2(
+    midpoint = 0,
+    low = "blue",
+    mid = "white",
+    high = "red"
+  )
+
+
+
+emm_dist <- emmeans(
+  lm.peace.assay,
+  ~ Yeast | Bacteria | distance_to_yeast,
+  at = list(
+    distance_to_yeast = c(10, 30, 50)
+  )
+)
+
+contrast_dist <- contrast(
+  emm_dist,
+  method = "trt.vs.ctrl",
+  ref = "Control",
+  reverse = TRUE,
+  adjust = "dunnett"
+)
+
+dist_df <- as.data.frame(contrast_dist)
+
+dist_df2 <- dist_df %>%
+  filter(!is.na(estimate)) %>%
+  mutate(
+    Yeast = str_remove(as.character(contrast), "Control - ")
+  )
+
+dist_df2$sig <- case_when(
+  dist_df2$p.value < 0.001 ~ "***",
+  dist_df2$p.value < 0.01 ~ "**",
+  dist_df2$p.value < 0.05 ~ "*",
+  TRUE ~ ""
+)
+
+
+ggplot(
+  dist_df2,
+  aes(
+    x = Yeast,
+    y = Bacteria,
+    fill = estimate
+  )
+) +
+  geom_tile() +
+  geom_text(aes(label = sig)) +
+  facet_wrap(~distance_to_yeast)
+
+
+emmip(
+  lm.peace.assay,
+  Bacteria ~ distance_to_yeast | Yeast,
+  at = list(
+    distance_to_yeast = seq(5, 55, by = 5)
+  ),
+  CIs = TRUE
+)
+
+emmip(
+  lm.peace.assay,
+  Yeast ~ distance_to_yeast | Bacteria
+)
+
+slopes <- emtrends(
+  lm.peace.assay,
+  ~ Yeast | Bacteria,
+  var = "distance_to_yeast"
+)
+
+slopes_df <- as.data.frame(slopes)
+
+ggplot(
+  slopes_df,
+  aes(
+    x = Yeast,
+    y = distance_to_yeast.trend,
+    fill = distance_to_yeast.trend > 0
+  )
+) +
+  geom_col() +
+  facet_wrap(~Bacteria) +
+  geom_hline(yintercept = 0)
+
+
+
+slopes <- emtrends(
+  lm.peace.assay,
+  ~ Bacteria | Yeast,
+  var = "distance_to_yeast"
+)
+
+slopes_df <- as.data.frame(slopes)
+
+slope_contr <- contrast(
+  slopes,
+  method = "trt.vs.ctrl",
+  ref = "Control",
+  reverse = TRUE
+)
+
+slope_sig <- as.data.frame(slope_contr)
+
+library(dplyr)
+library(stringr)
+
+sig_df <- slope_sig %>%
+  mutate(
+    Yeast = str_remove(as.character(contrast),
+                       "Control - "),
+    sig = case_when(
+      p.value < 0.001 ~ "***",
+      p.value < 0.01  ~ "**",
+      p.value < 0.05  ~ "*",
+      TRUE ~ ""
+    )
+  ) %>%
+  dplyr::select(Bacteria, Yeast, sig)
+
+plot_df <- slopes_df %>%
+  left_join(sig_df,
+            by = c("Bacteria","Yeast"))
+
+
+ggplot(
+  plot_df,
+  aes(
+    x = Yeast,
+    y = Bacteria,
+    fill = distance_to_yeast.trend
+  )
+) +
+  geom_tile(color = "white") +
+
+  geom_text(
+    aes(label = sig),
+    size = 5,
+    fontface = "bold"
+  ) +
+
+  scale_fill_gradient2(
+    low = "#d73027",
+    mid = "white",
+    high = "#1a9850",
+    midpoint = 0,
+    name = "Growth change\nper mm distance"
+  ) +
+
+  theme_bw() +
+  theme(
+    axis.text.x = element_text(
+      angle = 45,
+      hjust = 1
+    )
+  )
+
+emmip(
+  lm.peace.assay,
+  Yeast ~ distance_to_yeast,
+  at = list(
+    distance_to_yeast = seq(5,55,5)
+  ),
+  CIs = F
+)
+
+
+emmip(
+  lm.peace.assay,
+  Yeast ~ distance_to_yeast,
+  by = "Bacteria",
+  at = list(
+    distance_to_yeast = seq(5,55,5)
+  )
+)
+
+
+
+```
+
+```{r}
+summary.df <- PeaceAssay.no.1st.data %>%
+  subset(Yeast != "Control") %>%
+  group_by(Bacteria, Yeast, distance_to_yeast, Replication, DAI) %>%
+  summarise(
+    Mean = mean(percent_change, na.rm = TRUE)
+  )
+
+summary.df2 <- summary.df %>%
+  left_join(
+    summary.df %>%
+      dplyr::filter(Yeast == "Control") %>%
+      dplyr::select(Bacteria, distance_to_yeast, ControlMean = Mean),
+    by = c("Bacteria", "distance_to_yeast")
+  ) %>%
+  mutate(
+    PercentOfControl = 100 * Mean / ControlMean,
+    PercentChange = 100 * (Mean - ControlMean) / ControlMean
+  ) %>%
+  subset(Yeast.x != "Control") 
+
+ord <- summary.df2 %>%
+  group_by(Yeast.x) %>%
+  summarize(m = mean(PercentChange)) %>%
+  arrange(desc(m)) %>%
+  pull(Yeast.x)
+
+summary.df2$Yeast.x <- factor(summary.df2$Yeast.x,
+                             levels = ord)
+
+
+bacteria.names <- c(
+  "AL65" = "italic('X. perforans')*'\nAL65'",
+  "B17"  = "italic('H. polaris')*'\nEMM_B17'",
+  "B30"  = "italic('C. flaccumfaciens')*'\nEMM_B30'",
+  "B44"  = "italic('C. flaccumfaciens')*'\nEMM_B44'",
+  "B5"   = "italic('P. massiliensis')*'\nEMM_B5'",
+  "B52"  = "italic('M. platani')*'\nEMM_B52'"
+)
+
+yeast.names <- c(
+  "EMM_F3"  = "Dothioraceae sp. EMM_F3",
+  "EMM_F49" = "S.koalae EMM_F49",
+  "EMM_F5"  = "Mycrosporomycetaceae sp. EMM_F5",
+  "EMM_F7"  = "H. sinensis EMM_F7",
+  "SP_F14"  = "A. pullulans SP_F14"
+)
+
+summary.df$DAI <- factor(
+  summary.df$DAI,
+  levels = c(4,6,8)
+)
+
+ggplot(
+  summary.df,
+  aes(
+    x = distance_to_yeast,
+    y = DAI,
+    fill = Mean
+  )
+) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(
+    low = "#2166AC",
+    mid = "white",
+    high = "#B2182B",
+    midpoint = 0,
+    limits = c(-25, 25),
+    oob = scales::squish,
+    name = "Growth relative\nto control (%)"
+  ) +
+  scale_y_discrete(
+    labels = yeast.names
+  ) +
+  facet_grid(
+    Yeast~Bacteria,
+    labeller = labeller(
+      Bacteria = as_labeller(
+        bacteria.names,
+        label_parsed
+      )
+    )
+  ) +
+  theme_bw() +
+  labs(
+    x = "Distance to yeast (mm)",
+    y = NULL
+  ) +
+  theme(
+    panel.grid = element_blank(),
+    strip.text = element_text(size = 10),
+    axis.text.y = element_text(size = 10),
+    legend.title = element_text(size = 11)
+  ) 
+
+
+
+ggplot(summary.df,
+       aes(distance_to_yeast,
+           Mean,
+           color = Yeast)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(
+      method = "loess",
+      se = FALSE,
+      linewidth = 1
+  ) +
+  facet_wrap(~Bacteria)
+
+
+
+
+
+
+
+m2 <- lm(
+  PercentChange ~ Bacteria * Yeast.x * distance_to_yeast,
+  data = summary.df2
+)
+anova(m2)
+emmeans(m2, "Yeast.x")
+test(
+  emmeans(m2, ~ Yeast.x | Bacteria |distance_to_yeast),
+  null = 0
+)
+
+ggplot(summary.df2,
+       aes(distance_to_yeast,
+           PercentChange,
+           color = Yeast.x)) +
+  geom_hline(yintercept = 0, linetype = 2) +
+  geom_line() +
+  geom_point() +
+  ylab("Growth relative to control (%)") +
+  theme_bw() + 
+  facet_wrap(~Bacteria)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+library(dplyr)
+library(ggplot2)
+
+B44_plot <- PeaceAssay.no.1st.data %>%
+  filter(
+    Bacteria == "B44",
+    Yeast %in% c("Control", "SP_F14")
+  ) %>%
+  
+
+ggplot(
+  B44_plot,
+  aes(
+    x = distance_to_yeast,
+    y = colony_diameter,
+    color = Yeast
+  )
+) +
+  geom_smooth(se = F)
+  stat_summary(
+    fun = mean,
+    geom = "line",
+    linewidth = 1.2
+  ) +
+  stat_summary(
+    fun = mean,
+    geom = "point",
+    size = 3
+  ) +
+  stat_summary(
+    fun.data = mean_se,
+    geom = "errorbar",
+    width = 1
+  ) +
+  facet_wrap(~DAI) +
+  scale_color_manual(
+    values = c(
+      "Control" = "black",
+      "SP_F14" = "#E69F00"
+    )
+  ) +
+  theme_bw() +
+  labs(
+    x = "Distance to yeast (mm)",
+    y = "Increase in colony diameter",
+    color = NULL
+  ) +
+  theme(
+    strip.background = element_rect(fill = "grey85"),
+    legend.position = "top"
+  )
+```
+
+
+
+
+
+
 ## ***Curtobacterium flaccumfaciens* EMM_B44**
 Plot is generated using loop around the 4 different classes of yeast, coming up with 4 plots as an output which will be combined in one plot.
 
@@ -650,23 +1547,122 @@ for (i in seq_along(day)) {
 ```{r Plot for EMM_B52}
 #read data
 B52 <- read.csv("CoCultureAssay/CoCultureAssayData/MergedB52.csv", na.strings = "na") 
+B52 <- B52 %>%
+  subset(Host %in% c("Magnolia", "Control"))
 #load cbb color palette
 cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 str(B52)
 #round off of the distance to yeast so that it is visibly a categorical variable
 B52$distance_to_yeast <- round(B52$distance_to_yeast, 0)
+
 #change into categorical dataset
 B52$Replication=as.factor(B52$Replication)
 B52$Yeast=as.factor(B52$Yeast)
 B52$DAI=as.factor(B52$DAI)
-B52$distance_to_yeast=as.factor(B52$distance_to_yeast)
-
 #remove the data for the distance zero
 B52.no.contact <- B52[B52$distance_to_yeast != 0, ]
 head(B52.no.contact)
 
 # remove data first data since it is a reference for increase in colony size and donot follow the assumption of linear model i.e. normal distribution
 B52.no.1st.data <- B52.no.contact[B52.no.contact$DAI != "2",]
+
+# We are changing the increase variable to assume that minor fluctuations in growth were due to measurment error not shrinkage. 
+B52.no.1st.data$increase2 <- ifelse(B52.no.1st.data$increase < 0, 0, B52.no.1st.data$increase)
+
+lm.b52.f49 <- lme4::lmer(
+  increase2 ~ distance_to_yeast*Yeast*DAI + 
+    (1|Replication),
+  data = B52.no.1st.data
+)
+car::Anova(lm.b52.f49, type = 3)
+
+# remove 3-way
+m2 <- lme4::lmer(increase2 ~
+             distance_to_yeast * Yeast +
+             distance_to_yeast * DAI +
+             Yeast * DAI + 
+    (1|Replication),
+  data = B52.no.1st.data)
+car::Anova(m2, type = 3)
+
+plot(lm.b52.f49)
+emm <- emmeans(lm.b52.f49, ~ Yeast | distance_to_yeast)
+contrast(
+  emm,
+  method = "trt.vs.ctrl",
+  ref = "Control",
+  reverse = TRUE,
+  adjust = "dunnett"
+)
+
+emmip(m2, Yeast ~ DAI)
+
+emmip(
+  m2,
+  Yeast ~ distance_to_yeast,
+  at = list(distance_to_yeast = seq(10, 55, by = 5)),
+  CIs = TRUE
+)
+
+averaged.b52 <- B52.no.1st.data %>%
+  filter(Yeast %in% c("Control", "EMM_F49", "SP_F14")) %>%
+  group_by(Replication, DAI, Yeast) %>%
+  summarise(
+    increase2 = mean(increase2, na.rm = TRUE),
+  ) 
+
+m3 <- lme4::lmer(increase2 ~ Yeast * DAI + 
+    (1|Replication),
+  data = averaged.b52)
+car::Anova(m3, type = 2)
+emm <- emmeans(m3, ~ Yeast | DAI)
+contrast(
+  emm,
+  method = "trt.vs.ctrl",
+  ref = "Control",
+  reverse = TRUE,
+  adjust = "dunnett"
+)
+
+ggplot(averaged.b52,
+       aes(x = DAI,
+           y = increase2,
+           color = Yeast,
+           fill = Yeast, 
+           group = Yeast)) +
+  geom_jitter(
+    width = 0.15,
+    height = 0,
+    color = "grey70",
+    alpha = 0.8,
+    size = 2
+  ) +
+  stat_summary(
+    fun = mean,
+    geom = "point",
+    size = 3,
+    color = "black",
+    shape = 21
+  ) +
+  stat_summary(
+    fun.data = mean_se,
+    geom = "errorbar",
+    width = 0.15,
+    linewidth = 0.8
+  ) +
+   stat_summary(
+    fun = mean,
+    geom = "line"
+  ) +
+  scale_color_manual(values = c(cbbPalette[[2]], cbbPalette[[3]], cbbPalette[[4]])) +
+  scale_fill_manual(values = c(cbbPalette[[2]], cbbPalette[[3]], cbbPalette[[4]])) +
+  labs(
+    x = NULL,
+    y = "Increase in colony diameter (mm)\nrelative to day 2"
+  ) +
+  theme_bw()
+
+
 
 #for plot purposes we used Day 6 data
 B52.Day6 <- B52.no.contact[B52.no.contact$DAI == "6",]
@@ -709,17 +1705,69 @@ final_plotB52 <- annotate_figure(combined_plotB52,
 print(final_plotB52)
 ```
 
+Isolating plots with SP14 and EMM_F49, since these are the Magnolia associated ones 
+```{r}
+levels(B52$Yeast)
+
+f49.dat <- yeast.b52.dat %>%
+  subset(Yeast %in% c("Control", "EMM_F49")) 
+
+f49 <- B52 %>%
+  #subset(Yeast %in% c("Control", "EMM_F49") & !DAI %in% c("2")) %>%
+  mutate(increase2 = ifelse(increase < 0, 0, increase)) %>%
+  ggplot(aes(Yeast, increase2, group = Yeast, color = Yeast)) +
+  #geom_point(size = 3) +
+  stat_summary(fun = mean, geom = "line") +   
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.5) +  
+  facet_wrap(~DAI) +
+  theme_bw() + 
+  ggtitle("S. koalae EMM_F49") +
+  #geom_hline(yintercept = 0, linetype = "dashed") +
+  xlab("Distance (mm) to yeast") +
+  ylab("colony diameter (mm)")
+
+sp14 <- B52 %>%
+  subset(Yeast %in% c("SP_F14") & !DAI %in% c("2")) %>%
+  group_by(Yeast, distance_to_yeast, DAI) %>%
+  mutate(delta_growth = colony_diameter - colony_diameter_control) %>%
+  summarise(
+    delta_control = mean(delta_growth, na.rm = TRUE),
+    se = sd(delta_growth, na.rm = TRUE) / sqrt(n())
+  ) %>%
+  ggplot(aes(distance_to_yeast, delta_control, group = Yeast)) +
+  geom_point(size = 3) +
+  geom_line() +
+  geom_errorbar(
+    aes(
+      ymin = delta_control - se,
+      ymax = delta_control + se
+    ),
+    width = 0.5
+  ) +
+  facet_wrap(~DAI) +
+  theme_bw() + 
+  ggtitle("A. pullulans SP_F14") +
+  #geom_hline(yintercept = 0, linetype = "dashed") +
+  xlab("Distance (mm) to yeast") +
+  ylab("Δ colony diameter (mm) \n from control")
+
+ggarrange(sp14, f49, nrow = 2)
+```
+
+
+
+
 ### Stats *Methylobacterium platanii* EMM_B52
 
 ```{r Stats for EMM_B52}
-B52.no.1st.data <- B52.no.contact[B52.no.contact$DAI != "2",]
-B52try <- lme(increase~distance_to_yeast*DAI*Yeast, data = B52.no.1st.data, random = ~1|Replication, na.action = na.omit)
-anova(B52try)
 
-resultsB52=lme(increase~DAI+distance_to_yeast*Yeast+DAI*Yeast, data = B52.no.1st.data, random = ~1|Replication, na.action = na.omit)
-summary(resultsB52)
-#Anova(resultsB5)
-anova(resultsB52)
+lm.b52.sp14 <- lme4::lmer(
+  increase ~ DAI * Yeast * distance_to_yeast +
+    (1|Replication),
+  data = B52.no.1st.data[B52.no.1st.data$Yeast %in% c("Control", "SP_F14"),]
+)
+car::Anova(lm.b52.sp14, type = 3)
+
 ```
 
 ### Loop for running analysis for each day separately for EMM_B52

@@ -1,0 +1,301 @@
+Replicate,Pathogen,Yeast,Rating,Isolate,LowConfTax,Label,Average,CombinedAvg
+1,PH1,1,2,EMM_F1,Fellomyces penicillatus ,EMM_F1_Fellomyces penicillatus ,2.667,3
+2,PH1,1,3,EMM_F1,Fellomyces penicillatus ,EMM_F1_Fellomyces penicillatus ,2.667,3
+3,PH1,1,3,EMM_F1,Fellomyces penicillatus ,EMM_F1_Fellomyces penicillatus ,2.667,3
+1,OOM,1,3,EMM_F1,Fellomyces penicillatus ,EMM_F1_Fellomyces penicillatus ,3,3.5
+2,OOM,1,3,EMM_F1,Fellomyces penicillatus ,EMM_F1_Fellomyces penicillatus ,3,3.5
+3,OOM,1,3,EMM_F1,Fellomyces penicillatus ,EMM_F1_Fellomyces penicillatus ,3,3.5
+1,Rhiz,1,4,EMM_F1,Fellomyces penicillatus ,EMM_F1_Fellomyces penicillatus ,4,4
+2,Rhiz,1,4,EMM_F1,Fellomyces penicillatus ,EMM_F1_Fellomyces penicillatus ,4,4
+3,Rhiz,1,4,EMM_F1,Fellomyces penicillatus ,EMM_F1_Fellomyces penicillatus ,4,4
+1,NVP5,1,4,EMM_F1,Fellomyces penicillatus ,EMM_F1_Fellomyces penicillatus ,4,4
+2,NVP5,1,4,EMM_F1,Fellomyces penicillatus ,EMM_F1_Fellomyces penicillatus ,4,4
+3,NVP5,1,4,EMM_F1,Fellomyces penicillatus ,EMM_F1_Fellomyces penicillatus ,4,4
+1,F98,1,,EMM_F1,Fellomyces penicillatus ,EMM_F1_Fellomyces penicillatus ,,3
+2,F98,1,,EMM_F1,Fellomyces penicillatus ,EMM_F1_Fellomyces penicillatus ,,3
+3,F98,1,,EMM_F1,Fellomyces penicillatus ,EMM_F1_Fellomyces penicillatus ,,3
+1,PH1,2,2,EMM_F3,Dothioraceae sp. ,EMM_F3_Dothioraceae sp. ,2.667,2.3335
+2,PH1,2,3,EMM_F3,Dothioraceae sp. ,EMM_F3_Dothioraceae sp. ,2.667,2.3335
+3,PH1,2,3,EMM_F3,Dothioraceae sp. ,EMM_F3_Dothioraceae sp. ,2.667,2.3335
+1,OOM,2,3,EMM_F3,Dothioraceae sp. ,EMM_F3_Dothioraceae sp. ,3,3.1665
+2,OOM,2,3,EMM_F3,Dothioraceae sp. ,EMM_F3_Dothioraceae sp. ,3,3.1665
+3,OOM,2,3,EMM_F3,Dothioraceae sp. ,EMM_F3_Dothioraceae sp. ,3,3.1665
+1,Rhiz,2,4,EMM_F3,Dothioraceae sp. ,EMM_F3_Dothioraceae sp. ,4,3.6665
+2,Rhiz,2,4,EMM_F3,Dothioraceae sp. ,EMM_F3_Dothioraceae sp. ,4,3.6665
+3,Rhiz,2,4,EMM_F3,Dothioraceae sp. ,EMM_F3_Dothioraceae sp. ,4,3.6665
+1,NVP5,2,4,EMM_F3,Dothioraceae sp. ,EMM_F3_Dothioraceae sp. ,3.667,3.8335
+2,NVP5,2,4,EMM_F3,Dothioraceae sp. ,EMM_F3_Dothioraceae sp. ,3.667,3.8335
+3,NVP5,2,3,EMM_F3,Dothioraceae sp. ,EMM_F3_Dothioraceae sp. ,3.667,3.8335
+1,F98,2,,EMM_F3,Dothioraceae sp. ,EMM_F3_Dothioraceae sp. ,,3
+2,F98,2,,EMM_F3,Dothioraceae sp. ,EMM_F3_Dothioraceae sp. ,,3
+3,F98,2,,EMM_F3,Dothioraceae sp. ,EMM_F3_Dothioraceae sp. ,,3
+1,PH1,3,4,EMM_F5,Cystobasidiomycetes sp. ,EMM_F5_Cystobasidiomycetes sp. ,4,4
+2,PH1,3,4,EMM_F5,Cystobasidiomycetes sp. ,EMM_F5_Cystobasidiomycetes sp. ,4,4
+3,PH1,3,4,EMM_F5,Cystobasidiomycetes sp. ,EMM_F5_Cystobasidiomycetes sp. ,4,4
+1,OOM,3,4,EMM_F5,Cystobasidiomycetes sp. ,EMM_F5_Cystobasidiomycetes sp. ,4,4
+2,OOM,3,4,EMM_F5,Cystobasidiomycetes sp. ,EMM_F5_Cystobasidiomycetes sp. ,4,4
+3,OOM,3,4,EMM_F5,Cystobasidiomycetes sp. ,EMM_F5_Cystobasidiomycetes sp. ,4,4
+1,Rhiz,3,4,EMM_F5,Cystobasidiomycetes sp. ,EMM_F5_Cystobasidiomycetes sp. ,4,4
+2,Rhiz,3,4,EMM_F5,Cystobasidiomycetes sp. ,EMM_F5_Cystobasidiomycetes sp. ,4,4
+3,Rhiz,3,4,EMM_F5,Cystobasidiomycetes sp. ,EMM_F5_Cystobasidiomycetes sp. ,4,4
+1,NVP5,3,4,EMM_F5,Cystobasidiomycetes sp. ,EMM_F5_Cystobasidiomycetes sp. ,4,4
+2,NVP5,3,4,EMM_F5,Cystobasidiomycetes sp. ,EMM_F5_Cystobasidiomycetes sp. ,4,4
+3,NVP5,3,4,EMM_F5,Cystobasidiomycetes sp. ,EMM_F5_Cystobasidiomycetes sp. ,4,4
+1,F98,3,,EMM_F5,Cystobasidiomycetes sp. ,EMM_F5_Cystobasidiomycetes sp. ,,3
+2,F98,3,,EMM_F5,Cystobasidiomycetes sp. ,EMM_F5_Cystobasidiomycetes sp. ,,3
+3,F98,3,,EMM_F5,Cystobasidiomycetes sp. ,EMM_F5_Cystobasidiomycetes sp. ,,3
+1,PH1,4,3,EMM_F8,Cystobasdium sp. ,EMM_F8_Cystobasdium sp. ,2.333,2.833
+2,PH1,4,2,EMM_F8,Cystobasdium sp. ,EMM_F8_Cystobasdium sp. ,2.333,2.833
+3,PH1,4,2,EMM_F8,Cystobasdium sp. ,EMM_F8_Cystobasdium sp. ,2.333,2.833
+1,OOM,4,3,EMM_F8,Cystobasdium sp. ,EMM_F8_Cystobasdium sp. ,3,3.5
+2,OOM,4,3,EMM_F8,Cystobasdium sp. ,EMM_F8_Cystobasdium sp. ,3,3.5
+3,OOM,4,3,EMM_F8,Cystobasdium sp. ,EMM_F8_Cystobasdium sp. ,3,3.5
+1,Rhiz,4,4,EMM_F8,Cystobasdium sp. ,EMM_F8_Cystobasdium sp. ,4,3.6665
+2,Rhiz,4,4,EMM_F8,Cystobasdium sp. ,EMM_F8_Cystobasdium sp. ,4,3.6665
+3,Rhiz,4,4,EMM_F8,Cystobasdium sp. ,EMM_F8_Cystobasdium sp. ,4,3.6665
+1,NVP5,4,4,EMM_F8,Cystobasdium sp. ,EMM_F8_Cystobasdium sp. ,3.667,3.3335
+2,NVP5,4,4,EMM_F8,Cystobasdium sp. ,EMM_F8_Cystobasdium sp. ,3.667,3.3335
+3,NVP5,4,3,EMM_F8,Cystobasdium sp. ,EMM_F8_Cystobasdium sp. ,3.667,3.3335
+1,F98,4,,EMM_F8,Cystobasdium sp. ,EMM_F8_Cystobasdium sp. ,,3
+2,F98,4,,EMM_F8,Cystobasdium sp. ,EMM_F8_Cystobasdium sp. ,,3
+3,F98,4,,EMM_F8,Cystobasdium sp. ,EMM_F8_Cystobasdium sp. ,,3
+1,PH1,5,4,EMM_F9,Dioszengia sp. ,EMM_F9_Dioszengia sp. ,4,3.5
+2,PH1,5,4,EMM_F9,Dioszengia sp. ,EMM_F9_Dioszengia sp. ,4,3.5
+3,PH1,5,4,EMM_F9,Dioszengia sp. ,EMM_F9_Dioszengia sp. ,4,3.5
+1,OOM,5,4,EMM_F9,Dioszengia sp. ,EMM_F9_Dioszengia sp. ,4,4
+2,OOM,5,4,EMM_F9,Dioszengia sp. ,EMM_F9_Dioszengia sp. ,4,4
+3,OOM,5,4,EMM_F9,Dioszengia sp. ,EMM_F9_Dioszengia sp. ,4,4
+1,Rhiz,5,4,EMM_F9,Dioszengia sp. ,EMM_F9_Dioszengia sp. ,4,4
+2,Rhiz,5,4,EMM_F9,Dioszengia sp. ,EMM_F9_Dioszengia sp. ,4,4
+3,Rhiz,5,4,EMM_F9,Dioszengia sp. ,EMM_F9_Dioszengia sp. ,4,4
+1,NVP5,5,4,EMM_F9,Dioszengia sp. ,EMM_F9_Dioszengia sp. ,4,4
+2,NVP5,5,4,EMM_F9,Dioszengia sp. ,EMM_F9_Dioszengia sp. ,4,4
+3,NVP5,5,4,EMM_F9,Dioszengia sp. ,EMM_F9_Dioszengia sp. ,4,4
+1,F98,5,,EMM_F9,Dioszengia sp. ,EMM_F9_Dioszengia sp. ,,3
+2,F98,5,,EMM_F9,Dioszengia sp. ,EMM_F9_Dioszengia sp. ,,3
+3,F98,5,,EMM_F9,Dioszengia sp. ,EMM_F9_Dioszengia sp. ,,3
+1,PH1,6,3,EMM_F12,Meira nashicola ,EMM_F12_Meira nashicola ,3,2.8335
+2,PH1,6,3,EMM_F12,Meira nashicola ,EMM_F12_Meira nashicola ,3,2.8335
+3,PH1,6,3,EMM_F12,Meira nashicola ,EMM_F12_Meira nashicola ,3,2.8335
+1,OOM,6,4,EMM_F12,Meira nashicola ,EMM_F12_Meira nashicola ,4,4
+2,OOM,6,4,EMM_F12,Meira nashicola ,EMM_F12_Meira nashicola ,4,4
+3,OOM,6,4,EMM_F12,Meira nashicola ,EMM_F12_Meira nashicola ,4,4
+1,Rhiz,6,4,EMM_F12,Meira nashicola ,EMM_F12_Meira nashicola ,4,4
+2,Rhiz,6,4,EMM_F12,Meira nashicola ,EMM_F12_Meira nashicola ,4,4
+3,Rhiz,6,4,EMM_F12,Meira nashicola ,EMM_F12_Meira nashicola ,4,4
+1,NVP5,6,4,EMM_F12,Meira nashicola ,EMM_F12_Meira nashicola ,4,4
+2,NVP5,6,4,EMM_F12,Meira nashicola ,EMM_F12_Meira nashicola ,4,4
+3,NVP5,6,4,EMM_F12,Meira nashicola ,EMM_F12_Meira nashicola ,4,4
+1,F98,6,,EMM_F12,Meira nashicola ,EMM_F12_Meira nashicola ,,4.333
+2,F98,6,,EMM_F12,Meira nashicola ,EMM_F12_Meira nashicola ,,4.333
+3,F98,6,,EMM_F12,Meira nashicola ,EMM_F12_Meira nashicola ,,4.333
+1,PH1,7,4,EMM_F16,Debaryomyces hansenii ,EMM_F16_Debaryomyces hansenii ,4,3.8335
+2,PH1,7,4,EMM_F16,Debaryomyces hansenii ,EMM_F16_Debaryomyces hansenii ,4,3.8335
+3,PH1,7,4,EMM_F16,Debaryomyces hansenii ,EMM_F16_Debaryomyces hansenii ,4,3.8335
+1,OOM,7,4,EMM_F16,Debaryomyces hansenii ,EMM_F16_Debaryomyces hansenii ,4,4
+2,OOM,7,4,EMM_F16,Debaryomyces hansenii ,EMM_F16_Debaryomyces hansenii ,4,4
+3,OOM,7,4,EMM_F16,Debaryomyces hansenii ,EMM_F16_Debaryomyces hansenii ,4,4
+1,Rhiz,7,4,EMM_F16,Debaryomyces hansenii ,EMM_F16_Debaryomyces hansenii ,4,4
+2,Rhiz,7,4,EMM_F16,Debaryomyces hansenii ,EMM_F16_Debaryomyces hansenii ,4,4
+3,Rhiz,7,4,EMM_F16,Debaryomyces hansenii ,EMM_F16_Debaryomyces hansenii ,4,4
+1,NVP5,7,4,EMM_F16,Debaryomyces hansenii ,EMM_F16_Debaryomyces hansenii ,4,4
+2,NVP5,7,4,EMM_F16,Debaryomyces hansenii ,EMM_F16_Debaryomyces hansenii ,4,4
+3,NVP5,7,4,EMM_F16,Debaryomyces hansenii ,EMM_F16_Debaryomyces hansenii ,4,4
+1,F98,7,,EMM_F16,Debaryomyces hansenii ,EMM_F16_Debaryomyces hansenii ,,3
+2,F98,7,,EMM_F16,Debaryomyces hansenii ,EMM_F16_Debaryomyces hansenii ,,3
+3,F98,7,,EMM_F16,Debaryomyces hansenii ,EMM_F16_Debaryomyces hansenii ,,3
+1,PH1,8,4,EMM_F22,Filobasidium mali,EMM_F22_Filobasidium mali,4,3.5
+2,PH1,8,4,EMM_F22,Filobasidium mali,EMM_F22_Filobasidium mali,4,3.5
+3,PH1,8,4,EMM_F22,Filobasidium mali,EMM_F22_Filobasidium mali,4,3.5
+1,OOM,8,4,EMM_F22,Filobasidium mali,EMM_F22_Filobasidium mali,4,4
+2,OOM,8,4,EMM_F22,Filobasidium mali,EMM_F22_Filobasidium mali,4,4
+3,OOM,8,4,EMM_F22,Filobasidium mali,EMM_F22_Filobasidium mali,4,4
+1,Rhiz,8,4,EMM_F22,Filobasidium mali,EMM_F22_Filobasidium mali,4,4
+2,Rhiz,8,4,EMM_F22,Filobasidium mali,EMM_F22_Filobasidium mali,4,4
+3,Rhiz,8,4,EMM_F22,Filobasidium mali,EMM_F22_Filobasidium mali,4,4
+1,NVP5,8,4,EMM_F22,Filobasidium mali,EMM_F22_Filobasidium mali,4,4
+2,NVP5,8,4,EMM_F22,Filobasidium mali,EMM_F22_Filobasidium mali,4,4
+3,NVP5,8,4,EMM_F22,Filobasidium mali,EMM_F22_Filobasidium mali,4,4
+1,F98,8,,EMM_F22,Filobasidium mali,EMM_F22_Filobasidium mali,,3
+2,F98,8,,EMM_F22,Filobasidium mali,EMM_F22_Filobasidium mali,,3
+3,F98,8,,EMM_F22,Filobasidium mali,EMM_F22_Filobasidium mali,,3
+1,PH1,9,4,EMM_F25,Vishniacozyma pseudopenaeus,EMM_F25_Vishniacozyma pseudopenaeus,3.667,3.8335
+2,PH1,9,3,EMM_F25,Vishniacozyma pseudopenaeus,EMM_F25_Vishniacozyma pseudopenaeus,3.667,3.8335
+3,PH1,9,4,EMM_F25,Vishniacozyma pseudopenaeus,EMM_F25_Vishniacozyma pseudopenaeus,3.667,3.8335
+1,OOM,9,4,EMM_F25,Vishniacozyma pseudopenaeus,EMM_F25_Vishniacozyma pseudopenaeus,4,4
+2,OOM,9,4,EMM_F25,Vishniacozyma pseudopenaeus,EMM_F25_Vishniacozyma pseudopenaeus,4,4
+3,OOM,9,4,EMM_F25,Vishniacozyma pseudopenaeus,EMM_F25_Vishniacozyma pseudopenaeus,4,4
+1,Rhiz,9,4,EMM_F25,Vishniacozyma pseudopenaeus,EMM_F25_Vishniacozyma pseudopenaeus,3.667,3.8335
+2,Rhiz,9,3,EMM_F25,Vishniacozyma pseudopenaeus,EMM_F25_Vishniacozyma pseudopenaeus,3.667,3.8335
+3,Rhiz,9,4,EMM_F25,Vishniacozyma pseudopenaeus,EMM_F25_Vishniacozyma pseudopenaeus,3.667,3.8335
+1,NVP5,9,4,EMM_F25,Vishniacozyma pseudopenaeus,EMM_F25_Vishniacozyma pseudopenaeus,4,4
+2,NVP5,9,4,EMM_F25,Vishniacozyma pseudopenaeus,EMM_F25_Vishniacozyma pseudopenaeus,4,4
+3,NVP5,9,4,EMM_F25,Vishniacozyma pseudopenaeus,EMM_F25_Vishniacozyma pseudopenaeus,4,4
+1,F98,9,,EMM_F25,Vishniacozyma pseudopenaeus,EMM_F25_Vishniacozyma pseudopenaeus,,3
+2,F98,9,,EMM_F25,Vishniacozyma pseudopenaeus,EMM_F25_Vishniacozyma pseudopenaeus,,3
+3,F98,9,,EMM_F25,Vishniacozyma pseudopenaeus,EMM_F25_Vishniacozyma pseudopenaeus,,3
+1,PH1,10,3,EMM_F42,Hannaella pagnoccae ,EMM_F42_Hannaella pagnoccae ,3.333,3
+2,PH1,10,4,EMM_F42,Hannaella pagnoccae ,EMM_F42_Hannaella pagnoccae ,3.333,3
+3,PH1,10,3,EMM_F42,Hannaella pagnoccae ,EMM_F42_Hannaella pagnoccae ,3.333,3
+1,OOM,10,3,EMM_F42,Hannaella pagnoccae ,EMM_F42_Hannaella pagnoccae ,3,3.5
+2,OOM,10,3,EMM_F42,Hannaella pagnoccae ,EMM_F42_Hannaella pagnoccae ,3,3.5
+3,OOM,10,3,EMM_F42,Hannaella pagnoccae ,EMM_F42_Hannaella pagnoccae ,3,3.5
+1,Rhiz,10,4,EMM_F42,Hannaella pagnoccae ,EMM_F42_Hannaella pagnoccae ,4,4
+2,Rhiz,10,4,EMM_F42,Hannaella pagnoccae ,EMM_F42_Hannaella pagnoccae ,4,4
+3,Rhiz,10,4,EMM_F42,Hannaella pagnoccae ,EMM_F42_Hannaella pagnoccae ,4,4
+1,NVP5,10,4,EMM_F42,Hannaella pagnoccae ,EMM_F42_Hannaella pagnoccae ,4,4
+2,NVP5,10,4,EMM_F42,Hannaella pagnoccae ,EMM_F42_Hannaella pagnoccae ,4,4
+3,NVP5,10,4,EMM_F42,Hannaella pagnoccae ,EMM_F42_Hannaella pagnoccae ,4,4
+1,F98,10,,EMM_F42,Hannaella pagnoccae ,EMM_F42_Hannaella pagnoccae ,,4.333
+2,F98,10,,EMM_F42,Hannaella pagnoccae ,EMM_F42_Hannaella pagnoccae ,,4.333
+3,F98,10,,EMM_F42,Hannaella pagnoccae ,EMM_F42_Hannaella pagnoccae ,,4.333
+1,PH1,11,4,EMM_F43,Symmetrospora coprosmae ,EMM_F43_Symmetrospora coprosmae ,3.667,3.667
+2,PH1,11,3,EMM_F43,Symmetrospora coprosmae ,EMM_F43_Symmetrospora coprosmae ,3.667,3.667
+3,PH1,11,4,EMM_F43,Symmetrospora coprosmae ,EMM_F43_Symmetrospora coprosmae ,3.667,3.667
+1,OOM,11,4,EMM_F43,Symmetrospora coprosmae ,EMM_F43_Symmetrospora coprosmae ,4,4
+2,OOM,11,4,EMM_F43,Symmetrospora coprosmae ,EMM_F43_Symmetrospora coprosmae ,4,4
+3,OOM,11,4,EMM_F43,Symmetrospora coprosmae ,EMM_F43_Symmetrospora coprosmae ,4,4
+1,Rhiz,11,4,EMM_F43,Symmetrospora coprosmae ,EMM_F43_Symmetrospora coprosmae ,4,4
+2,Rhiz,11,4,EMM_F43,Symmetrospora coprosmae ,EMM_F43_Symmetrospora coprosmae ,4,4
+3,Rhiz,11,4,EMM_F43,Symmetrospora coprosmae ,EMM_F43_Symmetrospora coprosmae ,4,4
+1,NVP5,11,4,EMM_F43,Symmetrospora coprosmae ,EMM_F43_Symmetrospora coprosmae ,4,4
+2,NVP5,11,4,EMM_F43,Symmetrospora coprosmae ,EMM_F43_Symmetrospora coprosmae ,4,4
+3,NVP5,11,4,EMM_F43,Symmetrospora coprosmae ,EMM_F43_Symmetrospora coprosmae ,4,4
+1,F98,11,,EMM_F43,Symmetrospora coprosmae ,EMM_F43_Symmetrospora coprosmae ,,3
+2,F98,11,,EMM_F43,Symmetrospora coprosmae ,EMM_F43_Symmetrospora coprosmae ,,3
+3,F98,11,,EMM_F43,Symmetrospora coprosmae ,EMM_F43_Symmetrospora coprosmae ,,3
+1,PH1,12,4,EMM_F46,Bulleromyces albus ,EMM_F46_Bulleromyces albus ,3,3
+2,PH1,12,2,EMM_F46,Bulleromyces albus ,EMM_F46_Bulleromyces albus ,3,3
+3,PH1,12,3,EMM_F46,Bulleromyces albus ,EMM_F46_Bulleromyces albus ,3,3
+1,OOM,12,4,EMM_F46,Bulleromyces albus ,EMM_F46_Bulleromyces albus ,4,4
+2,OOM,12,4,EMM_F46,Bulleromyces albus ,EMM_F46_Bulleromyces albus ,4,4
+3,OOM,12,4,EMM_F46,Bulleromyces albus ,EMM_F46_Bulleromyces albus ,4,4
+1,Rhiz,12,4,EMM_F46,Bulleromyces albus ,EMM_F46_Bulleromyces albus ,4,4
+2,Rhiz,12,4,EMM_F46,Bulleromyces albus ,EMM_F46_Bulleromyces albus ,4,4
+3,Rhiz,12,4,EMM_F46,Bulleromyces albus ,EMM_F46_Bulleromyces albus ,4,4
+1,NVP5,12,4,EMM_F46,Bulleromyces albus ,EMM_F46_Bulleromyces albus ,4,3.5
+2,NVP5,12,4,EMM_F46,Bulleromyces albus ,EMM_F46_Bulleromyces albus ,4,3.5
+3,NVP5,12,4,EMM_F46,Bulleromyces albus ,EMM_F46_Bulleromyces albus ,4,3.5
+1,F98,12,,EMM_F46,Bulleromyces albus ,EMM_F46_Bulleromyces albus ,,3
+2,F98,12,,EMM_F46,Bulleromyces albus ,EMM_F46_Bulleromyces albus ,,3
+3,F98,12,,EMM_F46,Bulleromyces albus ,EMM_F46_Bulleromyces albus ,,3
+1,PH1,13,3,EMM_F49,Sporobolomyces koalae ,EMM_F49_Sporobolomyces koalae ,2.667,2.8335
+2,PH1,13,3,EMM_F49,Sporobolomyces koalae ,EMM_F49_Sporobolomyces koalae ,2.667,2.8335
+3,PH1,13,2,EMM_F49,Sporobolomyces koalae ,EMM_F49_Sporobolomyces koalae ,2.667,2.8335
+1,OOM,13,4,EMM_F49,Sporobolomyces koalae ,EMM_F49_Sporobolomyces koalae ,4,4
+2,OOM,13,4,EMM_F49,Sporobolomyces koalae ,EMM_F49_Sporobolomyces koalae ,4,4
+3,OOM,13,4,EMM_F49,Sporobolomyces koalae ,EMM_F49_Sporobolomyces koalae ,4,4
+1,Rhiz,13,3,EMM_F49,Sporobolomyces koalae ,EMM_F49_Sporobolomyces koalae ,3.667,3.8335
+2,Rhiz,13,4,EMM_F49,Sporobolomyces koalae ,EMM_F49_Sporobolomyces koalae ,3.667,3.8335
+3,Rhiz,13,4,EMM_F49,Sporobolomyces koalae ,EMM_F49_Sporobolomyces koalae ,3.667,3.8335
+1,NVP5,13,4,EMM_F49,Sporobolomyces koalae ,EMM_F49_Sporobolomyces koalae ,4,4
+2,NVP5,13,4,EMM_F49,Sporobolomyces koalae ,EMM_F49_Sporobolomyces koalae ,4,4
+3,NVP5,13,4,EMM_F49,Sporobolomyces koalae ,EMM_F49_Sporobolomyces koalae ,4,4
+1,F98,13,,EMM_F49,Sporobolomyces koalae ,EMM_F49_Sporobolomyces koalae ,,3
+2,F98,13,,EMM_F49,Sporobolomyces koalae ,EMM_F49_Sporobolomyces koalae ,,3
+3,F98,13,,EMM_F49,Sporobolomyces koalae ,EMM_F49_Sporobolomyces koalae ,,3
+1,PH1,14,4,EMM_F58,Derxomyces nakasei ,EMM_F58_Derxomyces nakasei ,4,3.5
+2,PH1,14,4,EMM_F58,Derxomyces nakasei ,EMM_F58_Derxomyces nakasei ,4,3.5
+3,PH1,14,4,EMM_F58,Derxomyces nakasei ,EMM_F58_Derxomyces nakasei ,4,3.5
+1,OOM,14,4,EMM_F58,Derxomyces nakasei ,EMM_F58_Derxomyces nakasei ,4,4
+2,OOM,14,4,EMM_F58,Derxomyces nakasei ,EMM_F58_Derxomyces nakasei ,4,4
+3,OOM,14,4,EMM_F58,Derxomyces nakasei ,EMM_F58_Derxomyces nakasei ,4,4
+1,Rhiz,14,4,EMM_F58,Derxomyces nakasei ,EMM_F58_Derxomyces nakasei ,4,4
+2,Rhiz,14,4,EMM_F58,Derxomyces nakasei ,EMM_F58_Derxomyces nakasei ,4,4
+3,Rhiz,14,4,EMM_F58,Derxomyces nakasei ,EMM_F58_Derxomyces nakasei ,4,4
+1,NVP5,14,4,EMM_F58,Derxomyces nakasei ,EMM_F58_Derxomyces nakasei ,4,4
+2,NVP5,14,4,EMM_F58,Derxomyces nakasei ,EMM_F58_Derxomyces nakasei ,4,4
+3,NVP5,14,4,EMM_F58,Derxomyces nakasei ,EMM_F58_Derxomyces nakasei ,4,4
+1,F98,14,,EMM_F58,Derxomyces nakasei ,EMM_F58_Derxomyces nakasei ,,3.667
+2,F98,14,,EMM_F58,Derxomyces nakasei ,EMM_F58_Derxomyces nakasei ,,3.667
+3,F98,14,,EMM_F58,Derxomyces nakasei ,EMM_F58_Derxomyces nakasei ,,3.667
+1,PH1,15,3,EMM_F60,Symmetrospora,EMM_F60_Symmetrospora,3.667,3.3335
+2,PH1,15,4,EMM_F60,Symmetrospora,EMM_F60_Symmetrospora,3.667,3.3335
+3,PH1,15,4,EMM_F60,Symmetrospora,EMM_F60_Symmetrospora,3.667,3.3335
+1,OOM,15,3,EMM_F60,Symmetrospora,EMM_F60_Symmetrospora,3.667,3.8335
+2,OOM,15,4,EMM_F60,Symmetrospora,EMM_F60_Symmetrospora,3.667,3.8335
+3,OOM,15,4,EMM_F60,Symmetrospora,EMM_F60_Symmetrospora,3.667,3.8335
+1,Rhiz,15,4,EMM_F60,Symmetrospora,EMM_F60_Symmetrospora,4,4
+2,Rhiz,15,4,EMM_F60,Symmetrospora,EMM_F60_Symmetrospora,4,4
+3,Rhiz,15,4,EMM_F60,Symmetrospora,EMM_F60_Symmetrospora,4,4
+1,NVP5,15,4,EMM_F60,Symmetrospora,EMM_F60_Symmetrospora,4,4
+2,NVP5,15,4,EMM_F60,Symmetrospora,EMM_F60_Symmetrospora,4,4
+3,NVP5,15,4,EMM_F60,Symmetrospora,EMM_F60_Symmetrospora,4,4
+1,F98,15,,EMM_F60,Symmetrospora,EMM_F60_Symmetrospora,,3
+2,F98,15,,EMM_F60,Symmetrospora,EMM_F60_Symmetrospora,,3
+3,F98,15,,EMM_F60,Symmetrospora,EMM_F60_Symmetrospora,,3
+1,PH1,16,4,EMM_F65,Sporobolomyces_shibatanus,EMM_F65_Sporobolomyces_shibatanus,3,3.3335
+2,PH1,16,2,EMM_F65,Sporobolomyces_shibatanus,EMM_F65_Sporobolomyces_shibatanus,3,3.3335
+3,PH1,16,3,EMM_F65,Sporobolomyces_shibatanus,EMM_F65_Sporobolomyces_shibatanus,3,3.3335
+1,OOM,16,3,EMM_F65,Sporobolomyces_shibatanus,EMM_F65_Sporobolomyces_shibatanus,3,3.5
+2,OOM,16,3,EMM_F65,Sporobolomyces_shibatanus,EMM_F65_Sporobolomyces_shibatanus,3,3.5
+3,OOM,16,3,EMM_F65,Sporobolomyces_shibatanus,EMM_F65_Sporobolomyces_shibatanus,3,3.5
+1,Rhiz,16,3,EMM_F65,Sporobolomyces_shibatanus,EMM_F65_Sporobolomyces_shibatanus,3.667,3.8335
+2,Rhiz,16,4,EMM_F65,Sporobolomyces_shibatanus,EMM_F65_Sporobolomyces_shibatanus,3.667,3.8335
+3,Rhiz,16,4,EMM_F65,Sporobolomyces_shibatanus,EMM_F65_Sporobolomyces_shibatanus,3.667,3.8335
+1,NVP5,16,4,EMM_F65,Sporobolomyces_shibatanus,EMM_F65_Sporobolomyces_shibatanus,3.667,3.8335
+2,NVP5,16,3,EMM_F65,Sporobolomyces_shibatanus,EMM_F65_Sporobolomyces_shibatanus,3.667,3.8335
+3,NVP5,16,4,EMM_F65,Sporobolomyces_shibatanus,EMM_F65_Sporobolomyces_shibatanus,3.667,3.8335
+1,F98,16,,EMM_F65,Sporobolomyces_shibatanus,EMM_F65_Sporobolomyces_shibatanus,,
+2,F98,16,,EMM_F65,Sporobolomyces_shibatanus,EMM_F65_Sporobolomyces_shibatanus,,
+3,F98,16,,EMM_F65,Sporobolomyces_shibatanus,EMM_F65_Sporobolomyces_shibatanus,,
+1,PH1,17,3,EMM_F70,Erythrobasidium,EMM_F70_Erythrobasidium,3.333,3
+2,PH1,17,3,EMM_F70,Erythrobasidium,EMM_F70_Erythrobasidium,3.333,3
+3,PH1,17,4,EMM_F70,Erythrobasidium,EMM_F70_Erythrobasidium,3.333,3
+1,OOM,17,4,EMM_F70,Erythrobasidium,EMM_F70_Erythrobasidium,4,4
+2,OOM,17,4,EMM_F70,Erythrobasidium,EMM_F70_Erythrobasidium,4,4
+3,OOM,17,4,EMM_F70,Erythrobasidium,EMM_F70_Erythrobasidium,4,4
+1,Rhiz,17,4,EMM_F70,Erythrobasidium,EMM_F70_Erythrobasidium,4,3.8335
+2,Rhiz,17,4,EMM_F70,Erythrobasidium,EMM_F70_Erythrobasidium,4,3.8335
+3,Rhiz,17,4,EMM_F70,Erythrobasidium,EMM_F70_Erythrobasidium,4,3.8335
+1,NVP5,17,4,EMM_F70,Erythrobasidium,EMM_F70_Erythrobasidium,4,4
+2,NVP5,17,4,EMM_F70,Erythrobasidium,EMM_F70_Erythrobasidium,4,4
+3,NVP5,17,4,EMM_F70,Erythrobasidium,EMM_F70_Erythrobasidium,4,4
+1,F98,17,,EMM_F70,Erythrobasidium,EMM_F70_Erythrobasidium,,3
+2,F98,17,,EMM_F70,Erythrobasidium,EMM_F70_Erythrobasidium,,3
+3,F98,17,,EMM_F70,Erythrobasidium,EMM_F70_Erythrobasidium,,3
+1,PH1,18,4,EMM_F74,Vishniacozyma,EMM_F74_Vishniacozyma,4,3.5
+2,PH1,18,4,EMM_F74,Vishniacozyma,EMM_F74_Vishniacozyma,4,3.5
+3,PH1,18,4,EMM_F74,Vishniacozyma,EMM_F74_Vishniacozyma,4,3.5
+1,OOM,18,4,EMM_F74,Vishniacozyma,EMM_F74_Vishniacozyma,4,4
+2,OOM,18,4,EMM_F74,Vishniacozyma,EMM_F74_Vishniacozyma,4,4
+3,OOM,18,4,EMM_F74,Vishniacozyma,EMM_F74_Vishniacozyma,4,4
+1,Rhiz,18,4,EMM_F74,Vishniacozyma,EMM_F74_Vishniacozyma,4,4
+2,Rhiz,18,4,EMM_F74,Vishniacozyma,EMM_F74_Vishniacozyma,4,4
+3,Rhiz,18,4,EMM_F74,Vishniacozyma,EMM_F74_Vishniacozyma,4,4
+1,NVP5,18,4,EMM_F74,Vishniacozyma,EMM_F74_Vishniacozyma,4,3.8335
+2,NVP5,18,4,EMM_F74,Vishniacozyma,EMM_F74_Vishniacozyma,4,3.8335
+3,NVP5,18,4,EMM_F74,Vishniacozyma,EMM_F74_Vishniacozyma,4,3.8335
+1,F98,18,,EMM_F74,Vishniacozyma,EMM_F74_Vishniacozyma,,3
+2,F98,18,,EMM_F74,Vishniacozyma,EMM_F74_Vishniacozyma,,3
+3,F98,18,,EMM_F74,Vishniacozyma,EMM_F74_Vishniacozyma,,3
+1,PH1,19,4,EMM_F79,Bullera,EMM_F79_Bullera,3,3
+2,PH1,19,2,EMM_F79,Bullera,EMM_F79_Bullera,3,3
+3,PH1,19,3,EMM_F79,Bullera,EMM_F79_Bullera,3,3
+1,OOM,19,4,EMM_F79,Bullera,EMM_F79_Bullera,4,4
+2,OOM,19,4,EMM_F79,Bullera,EMM_F79_Bullera,4,4
+3,OOM,19,4,EMM_F79,Bullera,EMM_F79_Bullera,4,4
+1,Rhiz,19,4,EMM_F79,Bullera,EMM_F79_Bullera,4,4
+2,Rhiz,19,4,EMM_F79,Bullera,EMM_F79_Bullera,4,4
+3,Rhiz,19,4,EMM_F79,Bullera,EMM_F79_Bullera,4,4
+1,NVP5,19,3,EMM_F79,Bullera,EMM_F79_Bullera,3,3.3335
+2,NVP5,19,3,EMM_F79,Bullera,EMM_F79_Bullera,3,3.3335
+3,NVP5,19,3,EMM_F79,Bullera,EMM_F79_Bullera,3,3.3335
+1,F98,19,,EMM_F79,Bullera,EMM_F79_Bullera,,3
+2,F98,19,,EMM_F79,Bullera,EMM_F79_Bullera,,3
+3,F98,19,,EMM_F79,Bullera,EMM_F79_Bullera,,3
+1,PH1,20,3,EMM_F89,Filobasidium,EMM_F89_Filobasidium,3.667,3
+2,PH1,20,4,EMM_F89,Filobasidium,EMM_F89_Filobasidium,3.667,3
+3,PH1,20,4,EMM_F89,Filobasidium,EMM_F89_Filobasidium,3.667,3
+1,OOM,20,4,EMM_F89,Filobasidium,EMM_F89_Filobasidium,3.667,3.667
+2,OOM,20,4,EMM_F89,Filobasidium,EMM_F89_Filobasidium,3.667,3.667
+3,OOM,20,3,EMM_F89,Filobasidium,EMM_F89_Filobasidium,3.667,3.667
+1,Rhiz,20,4,EMM_F89,Filobasidium,EMM_F89_Filobasidium,4,4
+2,Rhiz,20,4,EMM_F89,Filobasidium,EMM_F89_Filobasidium,4,4
+3,Rhiz,20,4,EMM_F89,Filobasidium,EMM_F89_Filobasidium,4,4
+1,NVP5,20,3,EMM_F89,Filobasidium,EMM_F89_Filobasidium,3.333,3.1665
+2,NVP5,20,3,EMM_F89,Filobasidium,EMM_F89_Filobasidium,3.333,3.1665
+3,NVP5,20,4,EMM_F89,Filobasidium,EMM_F89_Filobasidium,3.333,3.1665
+1,F98,20,,EMM_F89,Filobasidium,EMM_F89_Filobasidium,,3
+2,F98,20,,EMM_F89,Filobasidium,EMM_F89_Filobasidium,,3
+3,F98,20,,EMM_F89,Filobasidium,EMM_F89_Filobasidium,,3
