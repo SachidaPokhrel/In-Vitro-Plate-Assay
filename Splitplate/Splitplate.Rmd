@@ -53,7 +53,11 @@ BioRep1$DAI=as.factor(BioRep1$DAI)
 ```{r Increase in colony size Plot for Biological replicate 1}
 #filter 1st data date and removing the 1st data since there was no growth associated with it. The data is considered to be the baseline for growth so since it violates the assumption of normality, we remove it from the analysis
 
-filterdata1 <-BioRep1[BioRep1$Media == "YePDA"& BioRep1$DAI != 2,]
+filterdata1 <- BioRep1[BioRep1$Media == "YePDA"& BioRep1$DAI != 2,]
+
+filterdata1 <- filterdata1 %>% 
+  filter(Yeast != "EMM_F48")
+
 #load library
 library(nlme)
 
@@ -112,7 +116,7 @@ colonysize1
 #filter data to avoid other data except of last day since it was detructive sample taking procedure and colony was taken out from the plate to measure the weight on the last day of data collection.
 
 filterdata1_2 <- filterdata1 %>% 
-  filter(DAI == "8" )
+  filter(DAI == "8" & Yeast != "EMM_F48")
 
 #stats used for colony weight
 cw1=lme(colony_weight~Yeast,data = filterdata1_2, random = ~1|Replication) ##replication random effect added by Dr. Steury
@@ -223,7 +227,7 @@ cw1andcfu1
 #read data
 BioRep2 <- read.csv("Splitplate/SplitPlateData/2024-11-11_SplitPlate_B52-1.csv", na.strings = "na")
 #load the color palettes
-cbbPalette <- c( "#E69F00", "#56B4E9", "#009E73", "#CC79A7")
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 #check the structure and see the data
 str(BioRep2)
 head(BioRep2)
@@ -393,4 +397,556 @@ cw2andcfu2 <- ggarrange(colonyweightplot2, CFU2PLOT, nrow = 1, ncol = 2, common.
 #cw2andcfu2 <- annotate_figure(cw2andcfu2, top = text_grob(expression(paste("Impact of Yeast on Growth of ", italic("Methylobacterium platani"), " EMM_B52 (Biological Replicate 2)")), color = "Blue2", size = 12, face = "bold", hjust = 0.5))
 cw2andcfu2
 ```
+
+## Both repeats of the experiment together. 
+```{r}
+
+# Read data
+B52_merged <- read.csv(
+  "Splitplate/SplitPlateData/B52_splitplate_together.csv",
+  na.strings = "na"
+)
+
+# Convert variables
+B52_merged <- B52_merged %>%
+  mutate(
+    Replication = factor(Replication),
+    Repeat      = factor(Repeat),
+    Colony      = factor(Colony),
+    Yeast       = factor(Yeast),
+    DAI         = factor(DAI)
+  )
+
+# Remove unwanted observations and average technical replicates
+B52_avg <- B52_merged %>%
+  filter(
+    Media != "R2A",
+    Yeast != "EMM_F48",
+    !DAI %in% c("2", "10")
+  ) %>%
+  group_by(
+    Repeat,
+    Replication,
+    Yeast,
+    DAI) %>%
+  summarise(
+    colony_diam = pmax(mean(increase, na.rm = TRUE), 0)
+  )
+```
+
+Data handling, we don't want R2A medium type, and EMM_F48, and day 2, and we want to average the two data points from the two technical replicates, then we want 
+```{r}
+m1 <- lme4::lmer(
+  colony_diam ~ Yeast * DAI +
+    (1 | Repeat/Replication),
+  data = B52_avg
+)
+
+summary(m1)
+car::Anova(m1)
+
+emmeans(m1, ~ Yeast)
+emmeans(m1, ~ DAI)
+emmeans(m1, pairwise ~ Yeast | DAI)
+
+
+
+yeast_labels <- c(
+    Control = "Control",
+  EMM_F49 = "italic('S. koalae')~' EMM_F49'",
+    SP_F14  = "italic('A. pullulans')~' SP_F14'"
+)
+
+yeast_xlabels <- c(
+  "Control" = "Control",
+  "SP_F14"  = "italic('A. pullulans')~' SP_F14'",
+  "EMM_F49" = "italic('S. koalae')~' EMM_F49'"
+)
+
+colony_diam <- ggplot(B52_avg,
+       aes(
+         x = DAI,
+         y = colony_diam,
+         color = Yeast
+       )) +
+  geom_point(alpha = 0.7) +
+
+  stat_summary(
+    aes(group = Yeast),
+    fun = mean,
+    geom = "line",
+    linewidth = 1
+  ) +
+
+  stat_summary(
+    aes(group = Yeast, fill = Yeast),
+    fun = mean,
+    geom = "point",
+    size = 4,
+    shape = 21,
+    color = "black"
+  ) +
+
+  stat_summary(
+    aes(group = Yeast),
+    fun.data = mean_se,
+    geom = "errorbar",
+    width = 0.15,
+    linewidth = 0.5
+  ) +
+
+  theme_bw() +
+  scale_color_manual(
+  values = cbbPalette[2:4],
+  labels = parse(text = yeast_labels),
+  guide = "none") +
+  scale_fill_manual(
+  values = cbbPalette[2:4],
+  labels = parse(text = yeast_labels)
+  ) +
+    scale_x_discrete(
+  labels = function(x) parse(text = yeast_xlabels[x])
+) +
+
+  xlab("Days after inoculation") +
+  ylab("Increase in colony diameter (mm) \n relative to day 2")
+```
+
+```{r}
+
+B52_wt <- B52_merged %>%
+  filter(
+    Media != "R2A",
+    Yeast != "EMM_F48",
+    DAI %in% c("8", "10")
+  ) %>%
+  group_by(
+    Repeat,
+    Replication,
+    Yeast) %>%
+  summarise(
+    colony_weight2 = mean(colony_weight, na.rm = TRUE)
+  )
+
+m2 <- lmer(
+  colony_weight2 ~ Yeast +
+    (1 | Repeat/Replication),
+  data = B52_wt
+)
+
+summary(m2)
+car::Anova(m2)
+
+emmeans(m2, ~ Yeast)
+emmeans(m2, pairwise ~ Yeast)
+
+
+# Remove unwanted observations and average technical replicates
+B52_wt_plot  <- ggplot(B52_wt,
+       aes(
+         x = Yeast,
+         y = colony_weight2,
+         fill = Yeast
+       )) +
+  geom_boxplot() +
+  geom_jitter(width = 0.1) +
+  theme_bw() +
+   scale_fill_manual(
+  values = cbbPalette[2:4],
+  labels = parse(text = yeast_labels) 
+  ) +
+    scale_x_discrete(
+  labels = function(x) parse(text = yeast_xlabels[x])
+) +
+
+  xlab("") +
+  ylab("Colony mass (g)") +
+  theme(
+  axis.text.x = element_text(
+    angle = 45,
+    hjust = 1,
+    vjust = 1
+  )
+)
+
+
+B52_cfu <- B52_merged %>%
+  filter(
+    Media != "R2A",
+    Yeast != "EMM_F48",
+    DAI %in% c("8", "10")
+  ) %>%
+  group_by(
+    Repeat,
+    Replication,
+    Yeast) %>%
+  summarise(
+    CFU2 = mean(CFU, na.rm = TRUE)
+  )
+
+m3 <- lmer(
+  log10(CFU2) ~ Yeast +
+    (1 | Repeat/Replication),
+  data = B52_cfu
+)
+
+summary(m3)
+car::Anova(m3)
+
+emmeans(m3, ~ Yeast)
+emmeans(m3, pairwise ~ Yeast)
+
+B52_cfu_plot <- ggplot(B52_cfu,
+       aes(
+         x = Yeast,
+         y = log10(CFU2),
+         fill = Yeast
+       )) +
+  geom_boxplot() +
+  geom_jitter(width = 0.1) +
+
+  theme_bw() +
+  scale_fill_manual(
+  values = cbbPalette[2:4],
+  labels = parse(text = yeast_labels)
+  ) +
+    scale_x_discrete(
+  labels = function(x) parse(text = yeast_xlabels[x])
+) +
+
+  xlab("") +
+  ylab("log 10 CFU") +
+  theme(
+  axis.text.x = element_text(
+    angle = 45,
+    hjust = 1,
+    vjust = 1
+  )
+)
+
+ggarrange(colony_diam, B52_wt_plot, B52_cfu_plot, common.legend = T, nrow = 3)
+```
+
+## Other Methylobacterium
+```{r}
+# Read data
+methylo <- read.csv(
+  "Splitplate/SplitPlateData/Splitplate_all_Methylobacterium.csv",
+  na.strings = "na"
+)
+
+# Remove EMM_F48 and DAI = 2
+methylo2 <- methylo %>%
+  filter(
+    Yeast != "EMM_F48",
+    Bacteria != "B52",
+    DAI != 2
+  ) %>%
+  mutate(
+    increase = ifelse(increase < 0, 0, increase)
+  ) %>%
+  group_by(
+    Bacteria,
+    Replication,
+    Yeast,
+    DAI) %>%
+  summarise(
+    increase2 = mean(increase, na.rm = TRUE)
+  ) 
+
+m_increase <- lme4::lmer(
+  increase2 ~ Yeast * Bacteria * as.factor(DAI) +
+    (1 | Replication),
+  data = methylo2
+)
+
+summary(m_increase)
+car::Anova(m_increase)
+emm <- emmeans(m_increase, ~ Yeast | Bacteria)
+emmeans(m_increase, ~ Yeast | Bacteria | DAI)
+emmeans(m_increase, pairwise ~ Yeast | Bacteria | DAI)
+
+emm <- emmeans(m_increase, ~ Yeast | Bacteria | DAI)
+
+emm_df <- as.data.frame(emm)
+
+percent_red <- emm_df %>%
+  group_by(Bacteria, DAI) %>%
+  mutate(
+    control_mean = emmean[Yeast == "Control"],
+    percent_reduction =
+      100 * (control_mean - emmean) / control_mean
+  ) %>%
+  filter(Yeast != "Control") %>%
+  ungroup()
+
+percent_red
+
+
+methylo3 <- methylo2 %>%
+  mutate(
+    Bacteria = dplyr::recode(
+      Bacteria,
+      "JM940" = "Methylobacterium radiotolerans JM-940",
+      "JM282" = "Methylobacterium oryzae JM-282",
+      "JM804" = "Methylobacterium gregans JM-804"
+    )
+  )
+
+
+bact_labels <- c(
+  "JM940" = "Methylobacterium radiotolerans\nJM-940",
+  "JM282" = "Methylobacterium oryzae\nJM-282",
+  "JM804" = "Methylobacterium gregans\nJM-804"
+)
+
+yeast_labels <- c(
+    Control = "Control",
+  EMM_F49 = "italic('S. koalae')~' EMM_F49'",
+    SP_F14  = "italic('A. pullulans')~' SP_F14'"
+)
+
+p1 <- ggplot(
+  methylo2,
+  aes(
+    x = factor(DAI),
+    y = increase2,
+    color = Yeast,
+    group = Yeast,
+    fill = Yeast
+  )
+) +
+  geom_jitter(width = 0.08, alpha = 0.4, size = 1.5) +
+  stat_summary(fun = mean, geom = "line", linewidth = 1) +
+  stat_summary(
+    fun = mean,
+    geom = "point",
+    size = 3,
+    shape = 21,
+    color = "black"
+  ) +
+  stat_summary(
+    fun.data = mean_se,
+    geom = "errorbar",
+    width = 0.15
+  ) +
+  labs(
+    x = "Days after inoculation",
+    y = "Increase in colony diameter (mm)\nrelative to day 2",
+    color = "Yeast",
+    fill = "Yeast"
+  ) +
+  theme_bw() +
+  scale_color_manual(
+  values = cbbPalette[2:4],
+  labels = parse(text = yeast_labels),
+  guide = "none") +
+  scale_fill_manual(
+  values = cbbPalette[2:4],
+  labels = parse(text = yeast_labels)
+  ) +
+  facet_wrap(
+  ~Bacteria,
+  labeller = as_labeller(c(
+    "JM940" = "atop(italic('M. radiotolerans'),'JM-940')",
+    "JM282" = "atop(italic('M. oryzae'),'JM-282')",
+    "JM804" = "atop(italic('M. gregans'),'JM-804')"
+  ), label_parsed)
+)
+
+p1
+```
+
+```{r}
+# Remove EMM_F48 and DAI = 2
+methylo_cw <- methylo %>%
+  filter(
+    Yeast != "EMM_F48",
+    Bacteria != "B52",
+    DAI == 8
+  ) %>%
+  group_by(
+    Bacteria,
+    Replication,
+    Yeast) %>%
+  summarise(
+    Colony_weight2 = mean(Colony_weight, na.rm = TRUE)
+  ) 
+
+m_cw <- lme4::lmer(
+  Colony_weight2 ~ Yeast * Bacteria +
+    (1 | Replication),
+  data = methylo_cw
+)
+
+summary(m_cw)
+car::Anova(m_cw)
+
+emmeans(m_cw, ~ Yeast | Bacteria)
+emmeans(m_cw, pairwise ~ Yeast | Bacteria)
+
+emm <- emmeans(m_cw, ~ Yeast | Bacteria)
+
+emm_df <- as.data.frame(emm)
+
+percent_red <- emm_df %>%
+  group_by(Bacteria) %>%
+  mutate(
+    control_mean = emmean[Yeast == "Control"],
+    percent_reduction =
+      100 * (control_mean - emmean) / control_mean
+  ) %>%
+  filter(Yeast != "Control") %>%
+  ungroup()
+
+percent_red
+
+yeast_xlabels <- c(
+  "Control" = "Control",
+  "SP_F14"  = "italic('A. pullulans')~' SP_F14'",
+  "EMM_F49" = "italic('S. koalae')~' EMM_F49'"
+)
+
+p2 <- ggplot(
+  methylo_cw,
+  aes(x = Yeast,
+      y = Colony_weight2,
+      group = Yeast,
+      fill = Yeast)
+) +
+  
+  geom_boxplot() +
+  labs(
+    x = "",
+    y = "Colony mass (g)"
+  ) +
+  geom_jitter(
+    width = 0.08,
+    alpha = 0.8,
+    size = 1.5
+  ) +
+  theme_bw() + 
+  scale_color_manual(values = c(cbbPalette[2:4])) +
+  scale_fill_manual(
+  values = cbbPalette[2:4],
+  labels = parse(text = yeast_labels)
+  ) +
+  scale_x_discrete(
+  labels = function(x) parse(text = yeast_xlabels[x])
+) +
+  facet_wrap(
+  ~Bacteria,
+  labeller = as_labeller(c(
+    "JM940" = "atop(italic('M. radiotolerans'),'JM-940')",
+    "JM282" = "atop(italic('M. oryzae'),'JM-282')",
+    "JM804" = "atop(italic('M. gregans'),'JM-804')"
+  ), label_parsed)
+) +
+  theme(
+  axis.text.x = element_text(
+    angle = 45,
+    hjust = 1,
+    vjust = 1
+  )
+)
+p2
+```
+
+```{r}
+# Remove EMM_F48 and DAI = 2
+methylo_cfu <- methylo %>%
+  filter(
+    Yeast != "EMM_F48",
+    Bacteria != "B52",
+    DAI == 8
+  ) %>%
+  group_by(
+    Bacteria,
+    Replication,
+    Yeast) %>%
+  summarise(
+    CFU = mean(average_cfu, na.rm = TRUE)
+  ) 
+
+m_cfu <- lme4::lmer(
+  log10(CFU) ~ Yeast * Bacteria +
+    (1 | Replication),
+  data = methylo_cfu
+)
+
+summary(m_cfu)
+car::Anova(m_cfu)
+
+emmeans(m_cfu, ~ Yeast | Bacteria)
+emmeans(m_cfu, pairwise ~ Yeast | Bacteria)
+
+cfu_pairs <- as.data.frame(
+  emmeans(m_cfu, pairwise ~ Yeast | Bacteria)$contrasts
+)
+
+cfu_pairs <- cfu_pairs %>%
+  mutate(
+    fold_difference = 10^estimate
+  )
+
+cfu_pairs
+
+p3 <- ggplot(
+  methylo_cfu,
+  aes(x = Yeast,
+      y = log10(CFU),
+      group = Yeast,
+      fill = Yeast)
+) +
+  
+  geom_boxplot() +
+  labs(
+    x = "",
+    y = "log 10 CFU"
+  ) +
+  geom_jitter(
+    width = 0.08,
+    alpha = 0.8,
+    size = 1.5
+  ) +
+  theme_bw() + 
+  scale_color_manual(values = c(cbbPalette[2:4])) +
+  scale_fill_manual(
+  values = cbbPalette[2:4],
+  labels = parse(text = yeast_labels)
+  ) +
+  scale_x_discrete(
+  labels = function(x) parse(text = yeast_xlabels[x])
+) +
+  facet_wrap(
+  ~Bacteria,
+  labeller = as_labeller(c(
+    "JM940" = "atop(italic('M. radiotolerans'),'JM-940')",
+    "JM282" = "atop(italic('M. oryzae'),'JM-282')",
+    "JM804" = "atop(italic('M. gregans'),'JM-804')"
+  ), label_parsed)
+) +
+  theme(
+  axis.text.x = element_text(
+    angle = 45,
+    hjust = 1,
+    vjust = 1
+  )
+)
+p3
+```
+
+```{r}
+ggarrange(p1, p2, p3, common.legend = T, nrow = 3, labels = "auto")
+```
+
+
+
+
+
+
+
+
+
+
 
